@@ -8,3 +8,5 @@ There is also an install.sh file where all the extra libraries needed to complet
 and their commands to do it.
 
 This vimrc requires vim-plug, so better to install all the extras in install.sh before launching vim.
+
+Completion is done with <tab>, while omnicompletion with control-space: <C-@>
