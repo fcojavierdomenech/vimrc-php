@@ -1,4 +1,4 @@
-# vimrc
+# vimrc-php
 Vim settings for php environments (also frameworks)
 
 To install just clone this repo from your .vim folder and change the vimrc file to:
