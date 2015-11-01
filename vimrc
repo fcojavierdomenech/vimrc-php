@@ -58,8 +58,6 @@ set relativenumber
 
 "ctags
 set tags=tags;/
-"important to set the dir to the current editing file to avoid missconfigurations with paths
-set autochdir
 
 "some extra settings
 set title "title of the window
