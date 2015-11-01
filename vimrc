@@ -321,11 +321,7 @@ fun! M() "{{{
 	execute "CtrlPMRUFiles"
 endfunction "}}}
 
-let MRU_Max_Entries = 1000
-let MRU_Exclude_Files = '^/tmp/.*\|^/var/tmp/.*'
-let MRU_Auto_Close = 1
-let MRU_Max_Menu_Entries = 20
-let MRU_Max_Submenu_Entries = 15
+let ctrlp_mruf_max = 1000
 
 
 "SUPERTAB + PHPCOMPLETE
@@ -428,16 +424,19 @@ function! GenTags()
 		execute "!php artisan ide-helper:generate"
 		echo '(re)Generating tags'
 		execute "!ctags -R --filter-terminator=php"
+		execute "!touch .git"
 	else
 		echo 'Not in a framework project'
 		if filereadable("tags")
 			echo "Regenerating tags..."
 			execute "!ctags -R --filter-terminator=php"
+			execute "!touch .git"
 		else
 			let choice = confirm("Create tags?", "&Yes\n&No", 2)
 			if choice == 1
 				echo "Generating tags..."
 				execute "!ctags -R --filter-terminator=php"
+				execute "!touch .git"
 			endif
 		endif
 	endif
