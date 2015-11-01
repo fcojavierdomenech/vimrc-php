@@ -234,7 +234,6 @@ vmap s S
 
 "mapeo para nuevos ambitos {
 inoremap {<Enter> {<Enter>}<Esc><Up>o
-inoremap } }<Esc>mt=i{'t$F}a
 
 "to remove the comment after new line
 au FileType c,cpp,php,java,js setlocal comments-=:// comments+=f://
