@@ -106,6 +106,9 @@ fun! Night() "{{{
 	highlight Normal ctermbg=None
 endfunction "}}}
 
+command! -nargs=* Day call Day()
+command! -nargs=* Night call Night()
+
 
 
 """"""""""""""""""""""""
@@ -302,6 +305,11 @@ fun! Tree() "{{{
 	execute "NERDTreeToggle"
 endfunction "}}}
 
+command! -nargs=* Tree call Tree()
+
+"Open NERDTree if no files specified
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 "MRU (CRTLP)
 "---------------------------------
@@ -322,12 +330,14 @@ endfunction "}}}
 
 let ctrlp_mruf_max = 1000
 
+command! -nargs=* MV call MV()
+command! -nargs=* MH call MH()
+command! -nargs=* M call M()
 
 "SUPERTAB + PHPCOMPLETE
 let g:SuperTabDefaultCompletionType = "context"
 
 inoremap <C-@> <C-x><C-o>
-
 
 
 "encode/decode HTML
@@ -445,20 +455,11 @@ function! GenTags()
 command! -nargs=* GenTags call GenTags()
 GenTags()
 
-command! -nargs=* Tree call Tree()
-command! -nargs=* Trees call Trees()
 
-command! -nargs=* Day call Day()
-command! -nargs=* Night call Night()
-
-command! -nargs=* MV call MV()
-command! -nargs=* MH call MH()
-command! -nargs=* M call M()
 
 
 "I want my colorscheme darker by default
 Night()
-
 
 
 
