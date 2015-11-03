@@ -81,9 +81,14 @@ set foldcolumn=3
 "colorscheme inkpot
 "colorscheme lucius
 "colorscheme badwolf
-colorscheme candycode
+"colorscheme candycode
 "colorscheme railscasts
 "colorscheme desertEx
+"colorscheme vimhut
+"colorscheme herald
+"colorscheme jellybeans
+"colorscheme atom
+colorscheme hybrid
 
 "some modifications to the colorscheme
 "to view current settings use for instance ':hi Folded'
@@ -96,15 +101,6 @@ hi FoldColumn ctermbg=None
 hi clear String
 hi String ctermfg=200
 hi CursorLine cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
-
-"custom colorscheme, you can configure your favorite colorscheme depending on
-"the amount of light
-fun! Day() "{{{
-endfunction "}}}
-
-fun! Night() "{{{
-	highlight Normal ctermbg=None
-endfunction "}}}
 
 command! -nargs=* Day call Day()
 command! -nargs=* Night call Night()
@@ -337,7 +333,7 @@ command! -nargs=* M call M()
 "SUPERTAB + PHPCOMPLETE
 let g:SuperTabDefaultCompletionType = "context"
 
-inoremap <C-@> <C-x><C-o>
+inoremap <C-@> <C-x><C-o><C-o><C-p>
 
 
 "encode/decode HTML
@@ -433,19 +429,25 @@ function! GenTags()
 		execute "!php artisan ide-helper:generate"
 		echo '(re)Generating tags'
 		execute "!ctags -R --filter-terminator=php"
-		execute "!touch .git"
+		if !filereadable(".git")
+			execute "!touch .git"
+		endif
 	else
 		echo 'Not in a framework project'
 		if filereadable("tags")
 			echo "Regenerating tags..."
 			execute "!ctags -R --filter-terminator=php"
-			execute "!touch .git"
+			if !filereadable(".git")
+				execute "!touch .git"
+			endif
 		else
 			let choice = confirm("Create tags?", "&Yes\n&No", 2)
 			if choice == 1
 				echo "Generating tags..."
 				execute "!ctags -R --filter-terminator=php"
-				execute "!touch .git"
+				if !filereadable(".git")
+					execute "!touch .git"
+				endif
 			endif
 		endif
 	endif
@@ -458,7 +460,25 @@ GenTags()
 
 
 
-"I want my colorscheme darker by default
+"custom colorscheme, you can configure your favorite colorscheme depending on
+"the amount of light
+fun! Day() "{{{
+endfunction "}}}
+
+fun! Night() "{{{
+	hi LineNr ctermfg=red 
+	hi LineNr ctermbg=none
+
+	hi Folded ctermfg=216
+	hi Folded ctermbg=black
+
+	hi FoldColumn ctermfg=216
+	hi FoldColumn ctermbg=None
+
+	hi MatchParen cterm=bold ctermbg=none ctermfg=magenta
+endfunction "}}}
+
+
 Night()
 
 
