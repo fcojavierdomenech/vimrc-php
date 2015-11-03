@@ -15,10 +15,6 @@ if has("syntax")
   syntax on
 endif
 
-" If using a dark background within the editing area and syntax highlighting
-" turn on this option as well
-"set background=dark
-
 " Uncomment the following to have Vim jump to the last position when
 " reopening a file
 if has("autocmd")
@@ -75,7 +71,7 @@ set t_Co=256
 set ruler
 set foldcolumn=3 
 
-"COLOR SCHEME some of my preferred
+"COLOR SCHEME some of my prefered
 "colorscheme blackbeauty
 "colorscheme vividchalk
 "colorscheme inkpot
@@ -311,6 +307,9 @@ command! -nargs=* Tree call Tree()
 "Open NERDTree if no files specified
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | let g:is_nerd_tree_opened=1 | else |  let g:is_nerd_tree_opened=0 | endif
+
+"Close NERDTree if it's the last window
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
 "MRU (CRTLP)
 "---------------------------------
