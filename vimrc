@@ -298,6 +298,11 @@ let php_sql_query = 1      "Syntax highlight SQL code inside PHP strings.
 "NERDTREE
 "---------------------------------
 fun! Tree() "{{{
+	if g:is_nerd_tree_opened==1
+		let g:is_nerd_tree_opened=0
+	else
+		let g:is_nerd_tree_opened=1
+	endif
 	execute "NERDTreeToggle"
 endfunction "}}}
 
@@ -305,7 +310,7 @@ command! -nargs=* Tree call Tree()
 
 "Open NERDTree if no files specified
 autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | let g:is_nerd_tree_opened=1 | else |  let g:is_nerd_tree_opened=0 | endif
 
 "MRU (CRTLP)
 "---------------------------------
@@ -321,6 +326,9 @@ endfunction "}}}
 
 fun! M() "{{{
 	execute "on"
+	if g:is_nerd_tree_opened == 1
+		execute "NERDTreeToggle"
+	endif
 	execute "CtrlPMRUFiles"
 endfunction "}}}
 
