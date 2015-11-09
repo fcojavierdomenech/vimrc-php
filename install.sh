@@ -21,3 +21,9 @@ ctags --version
 # ide-helper for composer projects (vendor libs autocomplete)
 composer require barryvdh/laravel-ide-helper
 #now from the framework-project root run: `php artisan ide-helper:generate`
+
+#ECLIM
+# install eclipse: https://eclipse.org/downloads/
+# don't use eclipse installer, better untar directly
+
+# install eclim, use eclim installer: http://sourceforge.net/projects/eclim/files/eclim/
