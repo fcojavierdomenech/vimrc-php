@@ -53,7 +53,7 @@ set relativenumber
 "set nowrap
 
 "ctags
-set tags=tags;/
+"set tags=tags;/
 
 "some extra settings
 set title "title of the window
@@ -125,7 +125,9 @@ Plug 'pangloss/vim-javascript'
 
 "code completion with 'tab'
 Plug 'ervandew/supertab'
-"Plug 'Valloric/YouCompleteMe'
+
+"automaticatically complete
+Plug 'Valloric/YouCompleteMe'
 
 "one colorscheme to rule them all lol
 Plug 'flazz/vim-colorschemes'
@@ -163,11 +165,9 @@ Plug 'scrooloose/syntastic'
 "tagbar
 Plug 'majutsushi/tagbar'
 
-"better php completion
-Plug 'shawncplus/phpcomplete.vim'
-
 "Ultisnips
 Plug 'SirVer/ultisnips'
+
 " Snippets are separated from the engine. Add this if you want them:
 Plug 'honza/vim-snippets'
 
@@ -191,7 +191,7 @@ nnoremap <leader>l <C-w>l
 nnoremap { [{
 nnoremap } ]}
 nnoremap <F12> :set list lcs=tab:\|\ 
-inoremap <C-@> <C-x><C-o>
+inoremap <C-@> <C-x><C-u>
 " moving between windows
 nnoremap <S-l> <C-w>l
 nnoremap <S-h> <C-w>h
@@ -221,9 +221,6 @@ inoremap <C-v> <esc> :call setreg("\"",system("xclip -o -selection clipboard"))<
 "in order to ident the pasted content
 autocmd VimEnter * nnoremap p p=`]`]l
 
-"mapea el ctrl espacio a user completion
-inoremap <C-@> <C-x><C-u><C-p>
-
 "mapping for surround plugin in visual mode
 vmap s S
 
@@ -237,14 +234,22 @@ au FileType c,cpp,php,java,js setlocal comments-=:// comments+=f://
 " Plugins Config
 """"""""""""""""""""""""""""""""""""""
 
-"AUTOCOMPLETE
+"ECLIM
 "---------------------------------
-set completeopt=longest,menuone
-autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
+let g:EclimCompletionMethod = 'omnifunc'
+function IniEclim()
+	if !filereadable("~/workspace/.metadata/.lock")
+		execute "!php ~/eclipse/eclimd &> /dev/null &"
+	endif
+:endfunction
 
-let g:phpcomplete_mappings = {
-  \ 'jump_to_def_split': '<leader>g',
-  \ }
+command! -nargs=* IniEclim call IniEclim()
+
+"AUTOCOMPLETE: YouCompleteMe
+"---------------------------------
+let g:ycm_min_num_of_chars_for_completion = 3
+let g:ycm_autoclose_preview_window_after_completion = 1
+
 
 "UTILSNIPS
 "---------------------------------
@@ -270,15 +275,10 @@ let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 1
 "no annoying code sniffer errors
 let g:syntastic_php_checkers = ['php', 'phpmd']
-
-"YANKRING
-"---------------------------------
-
-if $USER == 'root'
-	let loaded_yankring = 120
-endif
-
-let g:yankring_max_element_length = 8388608 " 8M
+let g:syntastic_error_symbol='✗'
+let g:syntastic_warning_symbol='⚠'
+let g:syntastic_style_error_symbol = '✗'
+let g:syntastic_style_warning_symbol = '⚠'
 
 "PHP
 "---------------------------------
@@ -288,7 +288,16 @@ let g:yankring_max_element_length = 8388608 " 8M
 "let php_folding = 1        "Set PHP folding of classes and functions.
 let php_htmlInStrings = 1  "Syntax highlight HTML code inside PHP strings.
 let php_sql_query = 1      "Syntax highlight SQL code inside PHP strings.
-"let php_noShortTags = 1    "Disable PHP short tags.
+
+
+"YANKRING
+"---------------------------------
+
+if $USER == 'root'
+	let loaded_yankring = 120
+endif
+
+let g:yankring_max_element_length = 8388608 " 8M
 
 
 "NERDTREE
@@ -311,6 +320,10 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | let g:is_n
 "Close NERDTree if it's the last window
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
+"Show bookmarks by default if any
+let NERDTreeShowBookmarks=1
+
+
 "MRU (CRTLP)
 "---------------------------------
 fun! MV() "{{{
@@ -323,7 +336,7 @@ fun! MH() "{{{
 	execute "CtrlPMRUFiles"
 endfunction "}}}
 
-fun! M() "{{{
+fun! Mon() "{{{
 	execute "on"
 	if g:is_nerd_tree_opened == 1
 		execute "NERDTreeToggle"
@@ -331,16 +344,28 @@ fun! M() "{{{
 	execute "CtrlPMRUFiles"
 endfunction "}}}
 
+fun! M() "{{{
+	execute "CtrlPMRUFiles"
+endfunction "}}}
+
 let ctrlp_mruf_max = 1000
 
 command! -nargs=* MV call MV()
 command! -nargs=* MH call MH()
+command! -nargs=* Mon call Mon()
 command! -nargs=* M call M()
 
 "SUPERTAB + PHPCOMPLETE
 let g:SuperTabDefaultCompletionType = "context"
 
+autocmd Filetype php setlocal omnifunc=eclim#php#complete#CodeComplete
+
 inoremap <C-@> <C-x><C-o><C-o><C-p>
+
+function! EnablePHPComplete()
+	execute "set completeopt=longest,menuone"
+	execute "autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP"
+	:endfunction
 
 
 "encode/decode HTML
@@ -376,7 +401,9 @@ let g:airline_symbols.paste = 'ρ'
 let g:airline_symbols.paste = 'Þ'
 let g:airline_symbols.paste = '∥'
 let g:airline_symbols.whitespace = 'Ξ'
-
+let g:airline_theme = 'powerlineish'
+let g:airline#extensions#syntastic#enabled = 1
+let g:airline#extensions#branch#enabled = 1
 
  """"""""""""""""""""""
  " HELPER FUNCTIONS
@@ -434,7 +461,6 @@ function! GenTags()
 	if isdirectory("./vendor")
 		echo '(re)Generating framework tags'
 		execute "!php artisan ide-helper:generate"
-		echo '(re)Generating tags'
 		execute "!ctags -R --filter-terminator=php"
 		if !filereadable(".git")
 			execute "!touch .git"
@@ -458,12 +484,10 @@ function! GenTags()
 			endif
 		endif
 	endif
-
 :endfunction
 
 command! -nargs=* GenTags call GenTags()
-GenTags()
-
+"GenTags()
 
 
 
