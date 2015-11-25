@@ -70,6 +70,12 @@ set pastetoggle=<F12>
 set t_Co=256
 set ruler
 set foldcolumn=3 
+"set indent to 4 spaces
+set expandtab ts=4 sw=4 ai
+
+"encoding to utf-8
+set encoding=utf-8  " The encoding displayed.
+set fileencoding=utf-8  " The encoding written to file.
 
 "COLOR SCHEME some of my prefered
 "colorscheme blackbeauty
@@ -174,6 +180,10 @@ Plug 'honza/vim-snippets'
 "Openserverbrowser, very useful his OpenServerSmartSearch function
 Plug 'tyru/open-browser.vim'
 
+"vim-oblique, vim search with /, & improvements
+Plug 'junegunn/vim-pseudocl'
+Plug 'junegunn/vim-oblique'
+
 call plug#end()
 
 
@@ -207,7 +217,7 @@ inoremap <silent> <F9> <esc> :YRShow<CR>
 " NERDTREE
 nnoremap <Leader>t :Tree<Enter>
 " CTRLP
-nnoremap <Leader>l :CtrlP<Enter>
+nnoremap <Leader>l :LocateFile<Enter>
 
 "nnoremap <Leader>s :!grep -IirlZ "pattern" .|xargs -0 vim
 
@@ -239,7 +249,7 @@ au FileType c,cpp,php,java,js setlocal comments-=:// comments+=f://
 let g:EclimCompletionMethod = 'omnifunc'
 function IniEclim()
 	if !filereadable("~/workspace/.metadata/.lock")
-		execute "!php ~/eclipse/eclimd &> /dev/null &"
+		execute "!~/eclipse/eclimd &> /dev/null &"
 	endif
 :endfunction
 
@@ -283,7 +293,6 @@ let g:syntastic_style_warning_symbol = '⚠'
 "PHP
 "---------------------------------
 
-"set indent to 6 spaces
 "special features for php
 "let php_folding = 1        "Set PHP folding of classes and functions.
 let php_htmlInStrings = 1  "Syntax highlight HTML code inside PHP strings.
@@ -507,6 +516,9 @@ fun! Night() "{{{
 	hi FoldColumn ctermbg=None
 
 	hi MatchParen cterm=bold ctermbg=none ctermfg=magenta
+    hi ObliqueCurrentMatch cterm=bold ctermbg=white ctermfg=none
+
+
 endfunction "}}}
 
 
