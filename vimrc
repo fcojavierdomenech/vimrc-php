@@ -184,6 +184,10 @@ Plug 'tyru/open-browser.vim'
 Plug 'junegunn/vim-pseudocl'
 Plug 'junegunn/vim-oblique'
 
+"Git plugs
+Plug 'tpope/vim-fugitive'
+Plug 'gregsexton/gitv'
+
 call plug#end()
 
 
