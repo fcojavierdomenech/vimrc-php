@@ -77,7 +77,10 @@ set expandtab ts=4 sw=4 ai
 set encoding=utf-8  " The encoding displayed.
 set fileencoding=utf-8  " The encoding written to file.
 
-"COLOR SCHEME some of my prefered
+
+""""""""""""""""""""""
+"COLOR SCHEME:some of my prefered
+""""""""""""""""""""""
 "colorscheme blackbeauty
 "colorscheme vividchalk
 "colorscheme inkpot
@@ -195,7 +198,7 @@ call plug#end()
 
 
 """"""""""""""""""""""
-"MAPPINGS
+"MAPPINGS: custom mappings
 """"""""""""""""""""""
 map <Space> <Leader>
 nnoremap j gj
@@ -230,6 +233,10 @@ nnoremap <Leader>l :LocateFile<Enter>
 
 nnoremap <Leader>f :grep <C-r><C-w> **/*.php | cw
 
+"create/edit file in the current directory
+nmap <Leader>e :edit %:p:h/
+
+
 " xclip is required for the following two commands
 " these allow to copy and paste from/to clipboard
 vmap <C-c> y:call system("xclip -i -selection clipboard", getreg("\""))<CR>:call system("xclip -i", getreg("\""))<CR>
@@ -248,7 +255,7 @@ inoremap {<Enter> {<Enter>}<Esc><Up>o
 au FileType c,cpp,php,java,js setlocal comments-=:// comments+=f://
 
 """"""""""""""""""""""""""""""""""""""
-" Plugins Config
+" Plugins: specific plugin configuration and mappings
 """"""""""""""""""""""""""""""""""""""
 
 "ECLIM
@@ -538,7 +545,3 @@ endfunction "}}}
 
 Night()
 
-
-
-"TODO
-"- show block with documentation when autocompleting
