@@ -3,6 +3,7 @@ cd ~/.vim
 # VIM-PLUG
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+#now, open vim and run :PlugInstall
 
 # CTAGS
 # this gets a patched ctags improoved for php
