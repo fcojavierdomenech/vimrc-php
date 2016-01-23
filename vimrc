@@ -228,14 +228,12 @@ inoremap <silent> <F9> <esc> :YRShow<CR>
 nnoremap <Leader>t :Tree<Enter>
 " CTRLP
 nnoremap <Leader>l :LocateFile<Enter>
-
 "nnoremap <Leader>s :!grep -IirlZ "pattern" .|xargs -0 vim
-
 nnoremap <Leader>f :grep <C-r><C-w> **/*.php | cw
-
 "create/edit file in the current directory
 nmap <Leader>e :edit %:p:h/
-
+" Run PHPUnit tests
+map <Leader>pu :!clear && vendor/phpunit/phpunit/phpunit <cr>
 
 " xclip is required for the following two commands
 " these allow to copy and paste from/to clipboard
@@ -520,7 +518,6 @@ command! -nargs=* GenTags call GenTags()
 "GenTags()
 
 
-
 "custom colorscheme, you can configure your favorite colorscheme depending on
 "the amount of light
 fun! Day() "{{{
@@ -544,4 +541,3 @@ endfunction "}}}
 
 
 Night()
-

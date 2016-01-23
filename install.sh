@@ -21,6 +21,7 @@ ctags --version
 # ide-helper for composer projects (vendor libs autocomplete)
 composer require barryvdh/laravel-ide-helper
 #now from the framework-project root run: `php artisan ide-helper:generate`
+#also, it'll help if you extend your models to \Eloquent instead of \Model
 
 #ECLIM
 # install eclipse: https://eclipse.org/downloads/
