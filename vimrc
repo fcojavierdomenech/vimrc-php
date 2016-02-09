@@ -193,14 +193,17 @@ Plug 'junegunn/vim-oblique'
 Plug 'tpope/vim-fugitive'
 Plug 'gregsexton/gitv'
 
-"Php refactoring tools
-Plug 'adoy/vim-php-refactoring-toolbox'
-
 "Surround plugin
 Plug 'tpope/vim-surround'
 
 "Project search plugin with AG
 Plug 'rking/ag.vim'
+
+"Project replace plugin
+Plug 'skwp/greplace.vim'
+
+"Php refactoring tools
+Plug 'adoy/vim-php-refactoring-toolbox'
 
 call plug#end()
 
@@ -208,7 +211,7 @@ call plug#end()
 """"""""""""""""""""""
 "MAPPINGS: custom mappings
 """"""""""""""""""""""
-nnoremap <leader>v <Plug>TaskList
+nnoremap <unique> <Leader>rv :call PhpRenameLocalVariable()<CR>
 map <Space> <Leader>
 nnoremap j gj
 nnoremap k gk
@@ -418,6 +421,10 @@ vnoremap <silent> <Leader>H :<C-u>silent '<,'>!perl -CI  -MHTML::Entities -pe '$
 set viewoptions=cursor,folds,slash,unix
 let g:skipview_files = ['*\.vim'] 
 
+"REMEMBER
+"--------------------------------
+set grepprg=ag    "we ant to use ag for the search
+let g:grep_cmd_opts = '--line-numbers --noheading'
 
 "AIRLINE
 "--------------------------------
