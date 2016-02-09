@@ -70,6 +70,8 @@ set pastetoggle=<F12>
 set t_Co=256
 set ruler
 set foldcolumn=3 
+set splitbelow "when spliting a new file will be placed below
+set splitright " " right
 "set indent to 4 spaces
 set expandtab ts=4 sw=4 ai
 
@@ -193,6 +195,9 @@ Plug 'gregsexton/gitv'
 
 "Php refactoring tools
 Plug 'adoy/vim-php-refactoring-toolbox'
+
+"Project search plugin with AG
+Plug 'rking/ag.vim'
 
 call plug#end()
 
@@ -536,6 +541,7 @@ fun! Night() "{{{
 	hi MatchParen cterm=bold ctermbg=none ctermfg=magenta
     hi ObliqueCurrentMatch cterm=bold ctermbg=white ctermfg=none
 
+    set guifont=Fira_Code:h17
 
 endfunction "}}}
 
