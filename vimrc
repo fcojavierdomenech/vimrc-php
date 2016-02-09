@@ -196,6 +196,9 @@ Plug 'gregsexton/gitv'
 "Php refactoring tools
 Plug 'adoy/vim-php-refactoring-toolbox'
 
+"Surround plugin
+Plug 'tpope/vim-surround'
+
 "Project search plugin with AG
 Plug 'rking/ag.vim'
 
@@ -205,6 +208,7 @@ call plug#end()
 """"""""""""""""""""""
 "MAPPINGS: custom mappings
 """"""""""""""""""""""
+nnoremap <leader>v <Plug>TaskList
 map <Space> <Leader>
 nnoremap j gj
 nnoremap k gk
