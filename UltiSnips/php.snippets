@@ -1,0 +1,30 @@
+snippet phperr "Shows errors on browser" b
+ini_set('display_errors',1);
+error_reporting('E_ALL');
+endsnippet
+
+snippet mail "send mail" b
+mail('${1:javi@booking-centre-online}','$2','$3');
+endsnippet
+
+snippet dd "var_dump + exit" b
+var_dump($1);
+exit;
+endsnippet
+
+snippet vd "var_dump" b
+var_dump($1);
+endsnippet
+
+snippet ech "echo.." b
+echo "$1";
+endsnippet
+
+snippet func "function foo ().." b
+/** $1
+ * $2
+ */
+function ${1} ($3) {
+	$4
+}
+endsnippet

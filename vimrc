@@ -303,6 +303,12 @@ let g:UltiSnipsJumpBackwardTrigger="<C-k>"
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 
+" Custom snippets dir
+set runtimepath+=~/.vim/vimrc-php
+let g:UltiSnipsSnippetsDir="~/.vim/vimrc-php/UltiSnips"
+"let g:UltiSnipsSnippetDirectories=[$HOME."/.vim/vimrc-php/UltiSnips"]
+
+
 "SYNTASTIC
 "---------------------------------
 
