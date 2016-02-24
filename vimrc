@@ -205,6 +205,9 @@ Plug 'skwp/greplace.vim'
 "Php refactoring tools
 Plug 'adoy/vim-php-refactoring-toolbox'
 
+"abolish heps handling words with substitutions abreviations and so
+Plug 'tpope/vim-abolish'
+
 call plug#end()
 
 

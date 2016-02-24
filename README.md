@@ -11,3 +11,7 @@ This vimrc requires vim-plug, so better to install all the extras in install.sh 
 
 I'm used to start vim from the project root directory.
 
+To use special fonts for coding (ubuntu):
+git clone --depth 1 --branch release https://github.com/adobe-fonts/source-code-pro.git ~/.fonts/adobe-fonts/source-code-pro
+sudo fc-cache -f -v
+sudo rm -rf /usr/share/fonts/opentype/scp/.git*
