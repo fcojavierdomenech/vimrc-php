@@ -95,7 +95,9 @@ set fileencoding=utf-8  " The encoding written to file.
 "colorscheme herald
 "colorscheme jellybeans
 "colorscheme atom
-colorscheme hybrid
+"colorscheme hybrid
+"colorscheme desert256
+colorscheme obsidian
 
 "some modifications to the colorscheme
 "to view current settings use for instance ':hi Folded'
@@ -182,7 +184,7 @@ Plug 'SirVer/ultisnips'
 " Snippets are separated from the engine. Add this if you want them:
 Plug 'honza/vim-snippets'
 
-"Openserverbrowser, very useful his OpenServerSmartSearch function
+"very useful his OpenServerSmartSearch function
 Plug 'tyru/open-browser.vim'
 
 "vim-oblique, vim search with /, & improvements
@@ -207,6 +209,12 @@ Plug 'adoy/vim-php-refactoring-toolbox'
 
 "abolish heps handling words with substitutions abreviations and so
 Plug 'tpope/vim-abolish'
+
+"vim php syntax improvement
+Plug 'StanAngeloff/php.vim'
+
+"types 'use' statements for you
+Plug 'arnaud-lb/vim-php-namespace'
 
 call plug#end()
 
@@ -267,9 +275,22 @@ inoremap {<Enter> {<Enter>}<Esc><Up>o
 "to remove the comment after new line
 au FileType c,cpp,php,java,js setlocal comments-=:// comments+=f://
 
+"mapping OpenBrowserSmartSearch function
+nnoremap <unique> <Leader>g :call CallGoogle()<CR>
+
 """"""""""""""""""""""""""""""""""""""
 " Plugins: specific plugin configuration and mappings
 """"""""""""""""""""""""""""""""""""""
+
+" OPEN-BROWSER
+"---------------------------------
+function CallGoogle()
+    let name = input('Google for: ')
+    call inputrestore()
+    execute "OpenBrowserSmartSearch ".name
+:endfunction
+
+command! -nargs=* CallGoogle call CallGoogle()
 
 "ECLIM
 "---------------------------------
@@ -430,10 +451,19 @@ vnoremap <silent> <Leader>H :<C-u>silent '<,'>!perl -CI  -MHTML::Entities -pe '$
 set viewoptions=cursor,folds,slash,unix
 let g:skipview_files = ['*\.vim'] 
 
-"REMEMBER
+"GREPLACE
 "--------------------------------
 set grepprg=ag    "we ant to use ag for the search
 let g:grep_cmd_opts = '--line-numbers --noheading'
+
+"PHP-NAMESPACE
+"--------------------------------
+function! IPhpInsertUse()
+    call PhpInsertUse()
+    call feedkeys('a',  'n')
+endfunction
+"autocmd FileType php inoremap <Leader>u <Esc>:call IPhpInsertUse()<CR>
+autocmd FileType php noremap <Leader>ns :call PhpInsertUse()<CR>
 
 "AIRLINE
 "--------------------------------
@@ -560,6 +590,9 @@ fun! Night() "{{{
 
 	hi MatchParen cterm=bold ctermbg=none ctermfg=magenta
     hi ObliqueCurrentMatch cterm=bold ctermbg=white ctermfg=none
+
+    "highlight Normal ctermfg=LightYellow ctermbg=NONE
+    highlight Normal ctermfg=WHITE ctermbg=NONE
 
     set guifont=Fira_Code:h17
 
