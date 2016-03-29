@@ -29,3 +29,4 @@ composer require barryvdh/laravel-ide-helper
 # don't use eclipse installer, better untar directly
 
 # install eclim, use eclim installer: http://sourceforge.net/projects/eclim/files/eclim/
+

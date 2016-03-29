@@ -220,6 +220,8 @@ Plug 'arnaud-lb/vim-php-namespace'
 "Calendar
 Plug 'itchyny/calendar.vim'
 
+Plug 'lilydjwg/colorizer'
+
 call plug#end()
 
 
@@ -376,6 +378,8 @@ let g:yankring_max_element_length = 8388608 " 8M
 
 "NERDTREE
 "---------------------------------
+let g:NERDTreeShowHidden=1 "show hidden files by default
+
 fun! Tree() "{{{
 	if g:is_nerd_tree_opened==1
 		let g:is_nerd_tree_opened=0
@@ -471,7 +475,14 @@ function! IPhpInsertUse()
     call feedkeys('a',  'n')
 endfunction
 "autocmd FileType php inoremap <Leader>u <Esc>:call IPhpInsertUse()<CR>
-autocmd FileType php noremap <Leader>ns :call PhpInsertUse()<CR>
+autocmd FileType php noremap <Leader>ni :call PhpInsertUse()<CR>
+
+function! IPhpExpandClass()
+    call PhpExpandClass()
+    call feedkeys('a', 'n')
+endfunction
+autocmd FileType php inoremap <Leader>ne <Esc>:call IPhpExpandClass()<CR>
+autocmd FileType php noremap <Leader>ne :call PhpExpandClass()<CR>
 
 "AIRLINE
 "--------------------------------
