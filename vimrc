@@ -104,7 +104,7 @@ colorscheme obsidian
 hi clear FoldColumn
 hi clear Folded
 hi Folded ctermfg=216
-hi Folded ctermbg=black
+hi Folded ctermbg=none
 hi FoldColumn ctermfg=216
 hi FoldColumn ctermbg=None
 hi clear String
@@ -129,6 +129,7 @@ Plug 'kien/ctrlp.vim'
 
 "visual addons tabline
 Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
 "plugin for comments
 Plug 'scrooloose/nerdcommenter'
@@ -215,6 +216,9 @@ Plug 'StanAngeloff/php.vim'
 
 "types 'use' statements for you
 Plug 'arnaud-lb/vim-php-namespace'
+
+"Calendar
+Plug 'itchyny/calendar.vim'
 
 call plug#end()
 
@@ -385,7 +389,7 @@ command! -nargs=* Tree call Tree()
 
 "Open NERDTree if no files specified
 autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | let g:is_nerd_tree_opened=1 | else |  let g:is_nerd_tree_opened=0 | endif
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") |let g:is_nerd_tree_opened=1 | NERDTree | execute "Calendar" | else |  let g:is_nerd_tree_opened=0 | endif
 
 "Close NERDTree if it's the last window
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
@@ -456,6 +460,10 @@ let g:skipview_files = ['*\.vim']
 set grepprg=ag    "we ant to use ag for the search
 let g:grep_cmd_opts = '--line-numbers --noheading'
 
+"CALENDAR
+let g:calendar_google_calendar = 1
+let g:calendar_google_task = 1
+
 "PHP-NAMESPACE
 "--------------------------------
 function! IPhpInsertUse()
@@ -480,9 +488,12 @@ let g:airline_symbols.linenr = '␤'
 let g:airline_symbols.branch = '⎇'
 let g:airline_symbols.paste = 'ρ'
 let g:airline_symbols.whitespace = 'Ξ'
-let g:airline_theme = 'powerlineish'
+"let g:airline_theme = 'powerlineish'
+let g:airline_theme = 'cool'
+"let g:airline_theme = 'bubblegum'
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#branch#enabled = 1
+:set laststatus=2
 
  """"""""""""""""""""""
  " HELPER FUNCTIONS
@@ -572,6 +583,7 @@ command! -nargs=* GenTags call GenTags()
 "custom colorscheme, you can configure your favorite colorscheme depending on
 "the amount of light
 fun! Day() "{{{
+    highlight Normal ctermfg=white ctermbg=black
 endfunction "}}}
 
 fun! Night() "{{{
@@ -589,8 +601,6 @@ fun! Night() "{{{
 
     "highlight Normal ctermfg=LightYellow ctermbg=NONE
     highlight Normal ctermfg=NONE ctermbg=NONE
-
-    set guifont=Fira_Code:h17
 
 endfunction "}}}
 
