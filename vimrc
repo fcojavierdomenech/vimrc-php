@@ -111,6 +111,7 @@ hi clear String
 hi String ctermfg=200
 hi CursorLine cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 
+
 command! -nargs=* Day call Day()
 command! -nargs=* Night call Night()
 
@@ -221,6 +222,9 @@ Plug 'arnaud-lb/vim-php-namespace'
 Plug 'itchyny/calendar.vim'
 
 Plug 'lilydjwg/colorizer'
+
+"adds font icons for programming languages
+Plug 'ryanoasis/vim-devicons'
 
 call plug#end()
 
@@ -491,23 +495,26 @@ if !exists('g:airline_symbols')
 endif
 
 " unicode symbols for airline
-let g:airline_left_sep = '»'
-let g:airline_left_sep = '▶'
-let g:airline_right_sep = '«'
-let g:airline_right_sep = '◀'
-let g:airline_symbols.linenr = '␊'
-let g:airline_symbols.linenr = '␤'
-let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.branch = '⎇'
-let g:airline_symbols.paste = 'ρ'
-let g:airline_symbols.paste = 'Þ'
-let g:airline_symbols.paste = '∥'
-let g:airline_symbols.whitespace = 'Ξ'
+"let g:airline_left_sep = '»'
+"let g:airline_left_sep = '▶'
+"let g:airline_right_sep = '«'
+"let g:airline_right_sep = '◀'
+"let g:airline_symbols.linenr = '␊'
+"let g:airline_symbols.linenr = '␤'
+"let g:airline_symbols.linenr = '¶'
+"let g:airline_symbols.branch = '⎇'
+"let g:airline_symbols.paste = 'ρ'
+"let g:airline_symbols.paste = 'Þ'
+"let g:airline_symbols.paste = '∥'
+"let g:airline_symbols.whitespace = 'Ξ'
+
 "let g:airline_theme = 'powerlineish'
 let g:airline_theme = 'cool'
 "let g:airline_theme = 'bubblegum'
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#branch#enabled = 1
+let g:airline_powerline_fonts = 1
+
 :set laststatus=2
 
  """"""""""""""""""""""
@@ -615,6 +622,7 @@ fun! Night() "{{{
     hi ObliqueCurrentMatch cterm=bold ctermbg=none ctermfg=none
 
     highlight Normal ctermfg=NONE ctermbg=NONE
+    highlight Comment cterm=italic
 
 endfunction "}}}
 
