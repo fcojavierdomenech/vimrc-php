@@ -126,7 +126,7 @@ call plug#begin()
 Plug 'scrooloose/nerdtree'
 
 "fuzzy finder and mru
-Plug 'kien/ctrlp.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 
 "visual addons tabline
 Plug 'bling/vim-airline'
@@ -221,6 +221,9 @@ Plug 'arnaud-lb/vim-php-namespace'
 "Calendar
 Plug 'itchyny/calendar.vim'
 
+"adds font icons for programming languages
+Plug 'ryanoasis/vim-devicons'
+
 call plug#end()
 
 
@@ -255,7 +258,8 @@ inoremap <silent> <F9> <esc> :YRShow<CR>
 " NERDTREE
 nnoremap <Leader>t :Tree<Enter>
 " CTRLP
-nnoremap <Leader>l :LocateFile<Enter>
+"nnoremap <Leader>l :LocateFile<Enter>
+nnoremap <Leader>l :CtrlP<Enter>
 "nnoremap <Leader>s :!grep -IirlZ "pattern" .|xargs -0 vim
 nnoremap <Leader>f :grep <C-r><C-w> **/*.php | cw
 "create/edit file in the current directory
@@ -317,7 +321,7 @@ command! -nargs=* IniEclimVerbose call IniEclimVerbose()
 
 "AUTOCOMPLETE: YouCompleteMe
 "---------------------------------
-let g:ycm_min_num_of_chars_for_completion = 3
+let g:ycm_min_num_of_chars_for_completion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
 
 
@@ -481,23 +485,12 @@ if !exists('g:airline_symbols')
 endif
 
 " unicode symbols for airline
-let g:airline_left_sep = '»'
-let g:airline_left_sep = '▶'
-let g:airline_right_sep = '«'
-let g:airline_right_sep = '◀'
-let g:airline_symbols.linenr = '␊'
-let g:airline_symbols.linenr = '␤'
-let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.branch = '⎇'
-let g:airline_symbols.paste = 'ρ'
-let g:airline_symbols.paste = 'Þ'
-let g:airline_symbols.paste = '∥'
-let g:airline_symbols.whitespace = 'Ξ'
 "let g:airline_theme = 'powerlineish'
 let g:airline_theme = 'cool'
 "let g:airline_theme = 'bubblegum'
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#branch#enabled = 1
+let g:airline_powerline_fonts = 1
 :set laststatus=2
 
  """"""""""""""""""""""
@@ -601,10 +594,14 @@ fun! Night() "{{{
 	hi FoldColumn ctermfg=216
 	hi FoldColumn ctermbg=None
 
-	hi MatchParen cterm=bold ctermbg=none ctermfg=magenta
-    hi ObliqueCurrentMatch cterm=bold ctermbg=none ctermfg=none
+	hi MatchParen cterm=bold ctermbg=black ctermfg=magenta
+    hi ObliqueCurrentMatch cterm=bold ctermbg=brown ctermfg=none
 
     highlight Normal ctermfg=NONE ctermbg=NONE
+
+    set t_ZH=[3m
+    set t_ZR=[23m
+    highlight Comment cterm=italic
 
 endfunction "}}}
 
