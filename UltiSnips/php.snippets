@@ -1,24 +1,36 @@
-snippet phperr "Shows errors on browser" b
+snippet error_reporting "Shows errors on browser" b
 ini_set('display_errors',1);
-error_reporting('E_ALL');
+error_reporting(E_ALL);
 endsnippet
+
+
 
 snippet mail "send mail" b
 mail('${1:javi@booking-centre-online}','$2','$3');
 endsnippet
+
+
 
 snippet dd "var_dump + exit" b
 var_dump($1);
 exit;
 endsnippet
 
+
+
 snippet vd "var_dump" b
 var_dump($1);
 endsnippet
 
+
+
 snippet ech "echo.." b
 echo "$1";
 endsnippet
+
+
+
+
 
 snippet func "function foo ().." b
 /** $1
@@ -28,3 +40,42 @@ function ${1} ($3) {
 	$4
 }
 endsnippet
+
+
+
+
+
+
+
+
+snippet new_test "simple test template" b
+<?php
+
+require_once(PATH_ROOT.'/libreria/$1.php');
+require_once(dirname(__FILE__).'/simpletest/autorun.php');
+require_once(dirname(__FILE__).'/simpletest/mock_objects.php');
+Mock::generate('$1');
+
+class Test${1} extends UnitTestCase {
+
+
+	var $${1/\w+\s*/\l$0/g};
+
+	function setUp()
+	{
+		$this->${1/\w+\s*/\u$0/g} = new $1();
+	}
+
+	function tearDown()
+	{
+	}
+
+	function test${2}() {
+		${3}
+	}
+
+}
+
+endsnippet
+
+
