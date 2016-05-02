@@ -1,6 +1,6 @@
-snippet error_reporting "Shows errors on browser" b
+snippet phperr "Shows errors on browser" b
 ini_set('display_errors',1);
-error_reporting(E_ALL);
+error_reporting('E_ALL');
 endsnippet
 
 
@@ -41,11 +41,39 @@ function ${1} ($3) {
 }
 endsnippet
 
+snippet html-temp "HTML basic template" b
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>${1}</title>
+	<link rel="stylesheet" href="${2}">
+</head>
+<body>
 
+${3}
 
+</body>
+</html>
+endsnippet
 
+snippet form "bootstrap form"
+<form method="POST" action="${1}" class="col-md-6">
+	${2}
+</form>
+endsnippet
 
+snippet form-field "bootstrap text form field" b
+<div class="form-group">
+	<label for="$2">${1}:</label>
+	<input type="${3}" name="$2" id="${2}" class="form-control" value="{{ old('$2') }}" >
+</div>
+endsnippet
 
+snippet form-button "bootstrap submit form button" b
+<div class="form-group">
+	<button type="submit" class="btn btn-${2:default}" >${1}</button>
+</div>
 
 
 snippet new_test "simple test template" b

@@ -111,6 +111,7 @@ hi clear String
 hi String ctermfg=200
 hi CursorLine cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 
+
 command! -nargs=* Day call Day()
 command! -nargs=* Night call Night()
 
@@ -484,9 +485,13 @@ let g:airline_left_sep = '»'
 let g:airline_left_sep = '▶'
 let g:airline_right_sep = '«'
 let g:airline_right_sep = '◀'
+let g:airline_symbols.linenr = '␊'
 let g:airline_symbols.linenr = '␤'
+let g:airline_symbols.linenr = '¶'
 let g:airline_symbols.branch = '⎇'
 let g:airline_symbols.paste = 'ρ'
+let g:airline_symbols.paste = 'Þ'
+let g:airline_symbols.paste = '∥'
 let g:airline_symbols.whitespace = 'Ξ'
 "let g:airline_theme = 'powerlineish'
 let g:airline_theme = 'cool'
@@ -560,7 +565,7 @@ function! GenTags()
 		if filereadable("tags")
 			echo "Regenerating tags..."
 			execute "!ctags -R --filter-terminator=php"
-            2475459		if !filereadable(".git")
+			if !filereadable(".git")
 				execute "!touch .git"
 			endif
 		else
@@ -596,10 +601,9 @@ fun! Night() "{{{
 	hi FoldColumn ctermfg=216
 	hi FoldColumn ctermbg=None
 
-	hi MatchParen cterm=bold ctermbg=black ctermfg=magenta
-    hi ObliqueCurrentMatch cterm=bold ctermbg=brown ctermfg=none
+	hi MatchParen cterm=bold ctermbg=none ctermfg=magenta
+    hi ObliqueCurrentMatch cterm=bold ctermbg=none ctermfg=none
 
-    "highlight Normal ctermfg=LightYellow ctermbg=NONE
     highlight Normal ctermfg=NONE ctermbg=NONE
 
 endfunction "}}}
