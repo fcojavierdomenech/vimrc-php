@@ -224,6 +224,9 @@ Plug 'itchyny/calendar.vim'
 "adds font icons for programming languages
 Plug 'ryanoasis/vim-devicons'
 
+"sync to ftp folder
+Plug 'eshion/vim-sync'
+
 call plug#end()
 
 
@@ -262,8 +265,8 @@ nnoremap <Leader>t :Tree<Enter>
 nnoremap <Leader>l :CtrlP<Enter>
 "nnoremap <Leader>s :!grep -IirlZ "pattern" .|xargs -0 vim
 nnoremap <Leader>f :grep <C-r><C-w> **/*.php | cw
-"create/edit file in the current directory
-nmap <Leader>e :edit %:p:h/
+"check errors
+nmap <Leader>e :!php -l %<Enter>
 " Run PHPUnit tests
 map <Leader>pu :!clear && vendor/phpunit/phpunit/phpunit <cr>
 
@@ -290,6 +293,10 @@ nnoremap <unique> <Leader>g :call CallGoogle()<CR>
 """"""""""""""""""""""""""""""""""""""
 " Plugins: specific plugin configuration and mappings
 """"""""""""""""""""""""""""""""""""""
+
+" VIM-SYNC
+"nnoremap <leader>up :call SyncUploadFile()<CR>
+"nnoremap <leader>dw :call SyncDownloadFile()<CR>
 
 " OPEN-BROWSER
 "---------------------------------
@@ -427,7 +434,9 @@ fun! M() "{{{
 	execute "CtrlPMRUFiles"
 endfunction "}}}
 
-let ctrlp_mruf_max = 1000
+let ctrlp_mruf_max = 1500
+let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:100'
+
 
 command! -nargs=* MV call MV()
 command! -nargs=* MH call MH()
