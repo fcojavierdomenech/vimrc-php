@@ -39,7 +39,7 @@ set hidden		" Hide buffers when they are abandoned
 set mouse=a		" Enable mouse usage (all modes)
 set background=dark " If using a dark background within the editing area and syntax highlighting
 " Keep 10 lines below and above the cursor
-set scrolloff=10 
+set scrolloff=10
 
 "allowing menus under console
 set wildmenu
@@ -53,12 +53,12 @@ set relativenumber
 "set nowrap
 
 "ctags
-"set tags=tags;/
+set tags=tags;/
 
 "some extra settings
 set title "title of the window
 set history=1000 "number of recorded changes in history
-set undolevels=1000 
+set undolevels=1000
 set nobackup
 set noswapfile
 set hlsearch "hightlight search
@@ -69,7 +69,7 @@ set wildignore=*.svn,*.bak,*.swp
 set pastetoggle=<F12>
 set t_Co=256
 set ruler
-set foldcolumn=3 
+set foldcolumn=3
 set splitbelow "when spliting a new file will be placed below
 set splitright " " right
 "set indent to 4 spaces
@@ -227,6 +227,10 @@ Plug 'ryanoasis/vim-devicons'
 "sync to ftp folder
 Plug 'eshion/vim-sync'
 
+"always highlight the surrounding tabs
+Plug 'Valloric/MatchTagAlways'
+
+
 call plug#end()
 
 
@@ -244,7 +248,7 @@ nnoremap <C-l> <C-w>l
 nnoremap <leader>l <C-w>l
 nnoremap { [{
 nnoremap } ]}
-nnoremap <F12> :set list lcs=tab:\|\ 
+nnoremap <F12> :set list lcs=tab:\|\
 inoremap <C-@> <C-x><C-u>
 " moving between windows
 nnoremap <S-l> <C-w>l
@@ -330,6 +334,7 @@ command! -nargs=* IniEclimVerbose call IniEclimVerbose()
 "---------------------------------
 let g:ycm_min_num_of_chars_for_completion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_collect_identifiers_from_tags_files = 1
 
 
 "UTILSNIPS
@@ -401,14 +406,14 @@ command! -nargs=* Tree call Tree()
 
 "Open NERDTree if no files specified
 autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") |let g:is_nerd_tree_opened=1 | NERDTree | execute "Calendar" | else |  let g:is_nerd_tree_opened=0 | endif
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") |let g:is_nerd_tree_opened=1 | NERDTree | else |  let g:is_nerd_tree_opened=0 | endif
 
 "Close NERDTree if it's the last window
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
 "Show bookmarks by default if any
 let NERDTreeShowBookmarks=1
-
+let NERDTreeWinSize=55
 
 "MRU (CRTLP)
 "---------------------------------
@@ -467,7 +472,7 @@ vnoremap <silent> <Leader>H :<C-u>silent '<,'>!perl -CI  -MHTML::Entities -pe '$
 "REMEMBER
 "--------------------------------
 set viewoptions=cursor,folds,slash,unix
-let g:skipview_files = ['*\.vim'] 
+let g:skipview_files = ['*\.vim']
 
 "GREPLACE
 "--------------------------------
@@ -496,10 +501,18 @@ endif
 " unicode symbols for airline
 "let g:airline_theme = 'powerlineish'
 let g:airline_theme = 'cool'
-"let g:airline_theme = 'bubblegum'
+let g:airline_theme = 'bubblegum'
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#branch#enabled = 1
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#eclim#enabled = 1
+let g:airline#extensions#whitespace#mixed_indent_algo = 1
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+let g:airline_section_b = '%{fnamemodify(getcwd(),":t")}'
+set ttimeoutlen=50
+
+
+
 :set laststatus=2
 
  """"""""""""""""""""""
@@ -508,7 +521,7 @@ let g:airline_powerline_fonts = 1
 
  "PrettyXML
  "--------------
- 
+
 "Formats an xml file 'pretty' well, the file must only contain the xml
 function! DoPrettyXML()
   let l:origft = &ft
@@ -529,36 +542,46 @@ command! PrettyXML call DoPrettyXML()
 
 "LINEDIFF/VIMDIFF
  "--------------
- 
+
 nnoremap <silent> <Leader>df :call DiffToggle('n')<CR>
 xnoremap <silent> <Leader>df :call DiffToggle('x')<CR>
 
 function! DiffToggle(mode) range
 	echo "difftoggle..."
 	if &diff
-		diffoff
-		echo "diffoff..."
+        echo "diffoff..."
+        execute ":windo if &diff | diffoff | endif"
 	else
 		if a:mode=='x'
 			echo "linediff..."
 			echo a:firstline."---".a:lastline
 			call linediff#Linediff(a:firstline, a:lastline)
 		else
-			echo "diff..."
-			diffthis
+
+            if g:is_nerd_tree_opened==1
+                execute "Tree"
+            endif
+
+            echo "diff windows..."
+            execute ":windo if ! &diff | diffthis | endif"
+			"diffthis
 		endif
 	endif
 :endfunction
 
 
-"TAG GENERATION
+"TAGBAR + TAG GENERATION
 "--------------
+nnoremap <leader>j :split<CR>:exec("tag ".expand("<cword>"))<CR>
+nnoremap <leader>k <C-T>
+
+"map <A-i> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
 
 function! GenTags()
 	if isdirectory("./vendor")
 		echo '(re)Generating framework tags'
 		execute "!php artisan ide-helper:generate"
-		execute "!ctags -R --filter-terminator=php"
+		execute "!ctags -R --filter-terminator=php --fields=+l."
 		if !filereadable(".git")
 			execute "!touch .git"
 		endif
@@ -566,7 +589,7 @@ function! GenTags()
 		echo 'Not in a framework project'
 		if filereadable("tags")
 			echo "Regenerating tags..."
-			execute "!ctags -R --filter-terminator=php"
+			execute "!ctags -R --filter-terminator=php ."
 			if !filereadable(".git")
 				execute "!touch .git"
 			endif
@@ -574,7 +597,7 @@ function! GenTags()
 			let choice = confirm("Create tags?", "&Yes\n&No", 2)
 			if choice == 1
 				echo "Generating tags..."
-				execute "!ctags -R --filter-terminator=php"
+				execute "!ctags -R --filter-terminator=php ."
 				if !filereadable(".git")
 					execute "!touch .git"
 				endif
@@ -587,6 +610,17 @@ command! -nargs=* GenTags call GenTags()
 "GenTags()
 
 
+"REMOVE TRAILING SPACES (and dos breaklines ^M)
+"--------------
+fun! RemoveTrailingSpaces() "{{{
+    execute '%s/\s\+$//e'
+    execute '%s/\r/\r/ge'
+endfunction "}}}
+command! -nargs=* RemoveTrailingSpaces call RemoveTrailingSpaces()
+
+
+"COLORSCHEME CUSTOMIZATION
+"--------------
 "custom colorscheme, you can configure your favorite colorscheme depending on
 "the amount of light
 fun! Day() "{{{
@@ -594,7 +628,7 @@ fun! Day() "{{{
 endfunction "}}}
 
 fun! Night() "{{{
-	hi LineNr ctermfg=red 
+	hi LineNr ctermfg=red
 	hi LineNr ctermbg=none
 
 	hi Folded ctermfg=216
@@ -604,7 +638,7 @@ fun! Night() "{{{
 	hi FoldColumn ctermbg=None
 
 	hi MatchParen cterm=bold ctermbg=black ctermfg=magenta
-    hi ObliqueCurrentMatch cterm=bold ctermbg=brown ctermfg=none
+    hi ObliqueCurrentMatch cterm=bold ctermbg=white ctermfg=black
 
     highlight Normal ctermfg=NONE ctermbg=NONE
 
