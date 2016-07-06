@@ -58,7 +58,7 @@ set tags=tags;/
 "some extra settings
 set title "title of the window
 set history=1000 "number of recorded changes in history
-set undolevels=1000
+set undolevels=3000
 set nobackup
 set noswapfile
 set hlsearch "hightlight search
@@ -79,6 +79,9 @@ set expandtab ts=4 sw=4 ai
 set encoding=utf-8  " The encoding displayed.
 set fileencoding=utf-8  " The encoding written to file.
 
+" Persistent undo
+set undodir=~/.vim/undodir
+set undofile
 
 """"""""""""""""""""""
 "COLOR SCHEME:some of my prefered
@@ -230,6 +233,14 @@ Plug 'eshion/vim-sync'
 "always highlight the surrounding tabs
 Plug 'Valloric/MatchTagAlways'
 
+"undo history visualizer
+Plug 'mbbill/undotree'
+
+"phpcomplete
+Plug 'shawncplus/phpcomplete.vim'
+
+"helps to fix the root directory of the project whatever is the file opened
+Plug 'airblade/vim-rooter'
 
 call plug#end()
 
@@ -273,6 +284,8 @@ nnoremap <Leader>f :grep <C-r><C-w> **/*.php | cw
 nmap <Leader>e :!php -l %<Enter>
 " Run PHPUnit tests
 map <Leader>pu :!clear && vendor/phpunit/phpunit/phpunit <cr>
+" UNDOTREE
+nnoremap <Leader>u :call UndotreeToggle()<CR>:call UndotreeFocus()<CR>
 
 " xclip is required for the following two commands
 " these allow to copy and paste from/to clipboard
@@ -318,6 +331,7 @@ let g:EclimCompletionMethod = 'omnifunc'
 function IniEclim()
 	if !filereadable("~/workspace/.metadata/.lock")
 		execute "!~/eclipse/eclimd &> /dev/null &"
+        autocmd Filetype php setlocal omnifunc=eclim#php#complete#CodeComplete
 	endif
 :endfunction
 
@@ -335,6 +349,12 @@ command! -nargs=* IniEclimVerbose call IniEclimVerbose()
 let g:ycm_min_num_of_chars_for_completion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_collect_identifiers_from_tags_files = 1
+
+"VIM-ROOTER
+"---------------------------------
+"what kind of files determine whether a directory is root
+let g:rooter_patterns = ['.project', '.git/']
+au BufEnter * Rooter
 
 
 "UTILSNIPS
@@ -451,15 +471,12 @@ command! -nargs=* M call M()
 "SUPERTAB + PHPCOMPLETE
 let g:SuperTabDefaultCompletionType = "context"
 
-autocmd Filetype php setlocal omnifunc=eclim#php#complete#CodeComplete
-
 inoremap <C-@> <C-x><C-o><C-o><C-p>
 
-function! EnablePHPComplete()
-	execute "set completeopt=longest,menuone"
-	execute "autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP"
-	:endfunction
-
+set completeopt=longest,menuone
+autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
+let g:phpcomplete_relax_static_constraint = 1
+let g:phpcomplete_parse_docblock_comments = 1
 
 "encode/decode HTML
 "--------------------------------
@@ -581,7 +598,7 @@ function! GenTags()
 	if isdirectory("./vendor")
 		echo '(re)Generating framework tags'
 		execute "!php artisan ide-helper:generate"
-		execute "!ctags -R --filter-terminator=php --fields=+l."
+		execute "!phpctags -R *"
 		if !filereadable(".git")
 			execute "!touch .git"
 		endif
@@ -589,7 +606,7 @@ function! GenTags()
 		echo 'Not in a framework project'
 		if filereadable("tags")
 			echo "Regenerating tags..."
-			execute "!ctags -R --filter-terminator=php ."
+            execute "!phpctags -R *"
 			if !filereadable(".git")
 				execute "!touch .git"
 			endif
@@ -597,7 +614,7 @@ function! GenTags()
 			let choice = confirm("Create tags?", "&Yes\n&No", 2)
 			if choice == 1
 				echo "Generating tags..."
-				execute "!ctags -R --filter-terminator=php ."
+                execute "!phpctags -R *"
 				if !filereadable(".git")
 					execute "!touch .git"
 				endif
