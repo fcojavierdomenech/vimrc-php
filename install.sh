@@ -24,3 +24,4 @@ composer require barryvdh/laravel-ide-helper
 
 # install patched font for terminal from: https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/SourceCodePro/Medium/complete/Sauce%20Code%20Pro%20Medium%20Nerd%20Font%20Complete%20Mono.ttf (copying to ~/.local/share/fonts  closing all terminal windows and editing settings)
 
+#if doesn't recognize colors at first:   ln -s plugged/vim-colorschemes/colors colors

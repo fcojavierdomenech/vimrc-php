@@ -242,6 +242,9 @@ Plug 'shawncplus/phpcomplete.vim'
 "helps to fix the root directory of the project whatever is the file opened
 Plug 'airblade/vim-rooter'
 
+"php simple syntax error checker
+Plug 'EvanDotPro/vim-php-syntax-check'
+
 call plug#end()
 
 
@@ -256,7 +259,6 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
-nnoremap <leader>l <C-w>l
 nnoremap { [{
 nnoremap } ]}
 nnoremap <F12> :set list lcs=tab:\|\
@@ -277,7 +279,7 @@ inoremap <silent> <F9> <esc> :YRShow<CR>
 nnoremap <Leader>t :Tree<Enter>
 " CTRLP
 "nnoremap <Leader>l :LocateFile<Enter>
-nnoremap <Leader>l :CtrlP<Enter>
+map <Leader>s :CtrlP<Enter>
 "nnoremap <Leader>s :!grep -IirlZ "pattern" .|xargs -0 vim
 nnoremap <Leader>f :grep <C-r><C-w> **/*.php | cw
 "check errors
@@ -564,16 +566,16 @@ nnoremap <silent> <Leader>df :call DiffToggle('n')<CR>
 xnoremap <silent> <Leader>df :call DiffToggle('x')<CR>
 
 function! DiffToggle(mode) range
-	echo "difftoggle..."
-	if &diff
+    echo "difftoggle..."
+    if &diff
         echo "diffoff..."
         execute ":windo if &diff | diffoff | endif"
-	else
-		if a:mode=='x'
-			echo "linediff..."
-			echo a:firstline."---".a:lastline
-			call linediff#Linediff(a:firstline, a:lastline)
-		else
+    else
+        if a:mode=='x'
+            echo "linediff..."
+            echo a:firstline."---".a:lastline
+            call linediff#Linediff(a:firstline, a:lastline)
+        else
 
             if g:is_nerd_tree_opened==1
                 execute "Tree"
@@ -581,10 +583,10 @@ function! DiffToggle(mode) range
 
             echo "diff windows..."
             execute ":windo if ! &diff | diffthis | endif"
-			"diffthis
-		endif
-	endif
-:endfunction
+            "diffthis
+        endif
+    endif
+    :endfunction
 
 
 "TAGBAR + TAG GENERATION
@@ -662,8 +664,10 @@ fun! Night() "{{{
     set t_ZH=[3m
     set t_ZR=[23m
     highlight Comment cterm=italic
+    hi Error ctermfg=17 ctermbg=166 cterm=none
+    hi SpellBad ctermfg=17 ctermbg=166 cterm=undercurl
 
 endfunction "}}}
 
-
 Night()
+
