@@ -6,7 +6,7 @@ endsnippet
 
 
 snippet mail "send mail" b
-mail('${1:javi@booking-centre-online.com}','$2','$3');
+mail('${1:fcojavierdomenech@gmail.com}','$2','$3');
 endsnippet
 
 
@@ -115,3 +115,7 @@ class Test${1} extends UnitTestCase {
 
 endsnippet
 
+snippet php_error "Include PHP error e invoca" b
+require_once(PATH_ROOT.'/php_error.php');
+\php_error\reportErrors();
+endsnippet

@@ -100,6 +100,7 @@ set undofile
 "colorscheme atom
 "colorscheme hybrid
 "colorscheme desert256
+"colorscheme distinguished
 colorscheme obsidian
 
 "some modifications to the colorscheme
@@ -110,8 +111,8 @@ hi Folded ctermfg=216
 hi Folded ctermbg=none
 hi FoldColumn ctermfg=216
 hi FoldColumn ctermbg=None
-hi clear String
-hi String ctermfg=200
+"hi clear String
+"hi String ctermfg=200
 hi CursorLine cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 
 
@@ -261,8 +262,13 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 nnoremap { [{
 nnoremap } ]}
+vmap { [{
+vmap } ]}
 nnoremap <F12> :set list lcs=tab:\|\
 inoremap <C-@> <C-x><C-u>
+" when diff mode
+nnoremap dn ]c
+nnoremap dN [c
 " moving between windows
 nnoremap <S-l> <C-w>l
 nnoremap <S-h> <C-w>h
@@ -656,7 +662,7 @@ fun! Night() "{{{
 	hi FoldColumn ctermfg=216
 	hi FoldColumn ctermbg=None
 
-	hi MatchParen cterm=bold ctermbg=black ctermfg=magenta
+    hi MatchParen cterm=bold ctermbg=black ctermfg=magenta
     hi ObliqueCurrentMatch cterm=bold ctermbg=white ctermfg=black
 
     highlight Normal ctermfg=NONE ctermbg=NONE
@@ -667,6 +673,8 @@ fun! Night() "{{{
     hi Error ctermfg=17 ctermbg=166 cterm=none
     hi SpellBad ctermfg=17 ctermbg=166 cterm=undercurl
 
+    " Braces coloring
+    autocmd BufRead,BufNewFile * syn match parens /[(){}]/ | hi parens ctermfg=blue
 endfunction "}}}
 
 Night()
