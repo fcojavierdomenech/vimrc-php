@@ -119,3 +119,17 @@ snippet php_error "Include PHP error e invoca" b
 require_once(PATH_ROOT.'/php_error.php');
 \php_error\reportErrors();
 endsnippet
+
+snippet print_r "print_r formateado para web" b
+echo '<pre>';
+print_r($1);
+echo '</pre>';
+endsnippet
+
+snippet /*** "Comentario titulo" b
+/*********************************
+ *
+ *        $1
+ *
+ *********************************/
+endsnippet

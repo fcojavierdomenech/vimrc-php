@@ -364,6 +364,9 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 let g:rooter_patterns = ['.project', '.git/']
 au BufEnter * Rooter
 
+"UNDOTREE
+"---------------------------------
+let g:undotree_WindowLayout=2
 
 "UTILSNIPS
 "---------------------------------
