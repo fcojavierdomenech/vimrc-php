@@ -164,19 +164,19 @@ Plug 'othree/html5.vim'
 Plug 'hail2u/vim-css3-syntax'
 
 "YankRing maintains a history of previous yanks, changes and deletes
-Plug 'YankRing.vim'
+Plug 'vim-scripts/YankRing.vim'
 
 "extended % matching for HTML, LateX and many other languages
-Plug 'matchit.zip'
+Plug 'vim-scripts/matchit.zip'
 
 "a vim plugin to perform vimdiffs on blocks of code (not only all the file)
 Plug 'AndrewRadev/linediff.vim'
 
 "save and manage macros
-Plug 'marvim'
+Plug 'vim-scripts/marvim'
 
 "a plugin for automatically restoring file's cursor position and folding
-Plug 'restore_view.vim'
+Plug 'vim-scripts/restore_view.vim'
 
 "syntastic
 Plug 'scrooloose/syntastic'
