@@ -384,6 +384,8 @@ set runtimepath+=~/.vim/vimrc-php
 let g:UltiSnipsSnippetsDir="~/.vim/vimrc-php/UltiSnips"
 "let g:UltiSnipsSnippetDirectories=[$HOME."/.vim/vimrc-php/UltiSnips"]
 
+"for Laravel blade templates being recognized as html
+autocmd BufNewFile,BufRead *.blade.php setlocal ft=html
 
 "SYNTASTIC
 "---------------------------------
