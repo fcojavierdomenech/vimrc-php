@@ -726,6 +726,14 @@ fun! TestV() "{{{
 endfunction "}}}
 
 command! -nargs=* TV call TestV()
+
+
+fun! InitPhpcdCodeigniter() "{{{
+    execute "!php ~/.config/nvim/plugged/phpcd.vim/php/main.php . msgpack application/config/autoload.php &"
+endfunction "}}}
+
+command! -nargs=* InitPhpcdCI call InitPhpcdCodeigniter()
+
 "COLORSCHEME CUSTOMIZATION
 "--------------
 "custom colorscheme, you can configure your favorite colorscheme depending on
