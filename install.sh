@@ -4,6 +4,11 @@
 
 cd ~/.vim
 
+#composer is required
+pt-get install curl php5-cli git
+curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+
+
 ##first we need to install curl to download vim-plug
 sudo apt-get install curl
 
@@ -27,19 +32,15 @@ sudo apt-get install xclip
 #You probably need also to install vim-nox in order to use YouCompleteMe
 sudo apt-get install vim-nox
 
-#IDE-HELPER
+#IDE-HELPER for laravel
 #ide-helper for composer projects (vendor libs autocomplete)
 composer require barryvdh/laravel-ide-helper
 
 #Now from the framework-project root run: `php artisan ide-helper:generate`
 #also, it'll help if you extend your models to \Eloquent instead of \Model
 
-##PHPCOMPLETE -> phpctags
-curl -Ss http://vim-php.com/phpctags/install/phpctags.phar > phpctags
-
-chmod +x phpctags
-
-sudo mv phpctags /usr/bin
+##PHPCD extras
+sudo pecl install msgpack
 
 cd ~/
 

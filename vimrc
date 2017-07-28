@@ -200,6 +200,7 @@ Plug 'junegunn/vim-oblique'
 "Git plugs
 Plug 'tpope/vim-fugitive'
 Plug 'gregsexton/gitv'
+Plug 'airblade/vim-gitgutter'
 
 "Surround plugin
 Plug 'tpope/vim-surround'
@@ -238,13 +239,23 @@ Plug 'Valloric/MatchTagAlways'
 Plug 'mbbill/undotree'
 
 "phpcomplete
-Plug 'shawncplus/phpcomplete.vim'
+"Plug 'shawncplus/phpcomplete.vim'
+
+"PHPCD
+Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
+autocmd FileType php setlocal omnifunc=phpcd#CompletePHP
 
 "helps to fix the root directory of the project whatever is the file opened
 Plug 'airblade/vim-rooter'
 
 "php simple syntax error checker
 Plug 'EvanDotPro/vim-php-syntax-check'
+
+"testing utility
+Plug 'janko-m/vim-test'
+
+"interacting with tmux
+Plug 'benmills/vimux'
 
 call plug#end()
 
@@ -387,9 +398,15 @@ let g:UltiSnipsSnippetsDir="~/.vim/vimrc-php/UltiSnips"
 "for Laravel blade templates being recognized as html
 autocmd BufNewFile,BufRead *.blade.php setlocal ft=html
 
+"FUGITIVE
+"---------------------------------
+set diffopt+=vertical
+
+
 "SYNTASTIC
 "---------------------------------
 
+"set statusline+=%{fugitive#statusline()}
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
@@ -648,7 +665,67 @@ fun! RemoveTrailingSpaces() "{{{
 endfunction "}}}
 command! -nargs=* RemoveTrailingSpaces call RemoveTrailingSpaces()
 
+"TESTING
+fun! TestN() "{{{
+    if isdirectory("./application/tests")
+        execute "cd application/tests"
+    endif
+    "execute 'VimuxRunCommand TestNearest'
+    execute 'TestNearest'
+    if isdirectory("../application/")
+        execute "cd ../.."
+    endif
+endfunction "}}}
 
+command! -nargs=* TN call TestN()
+
+fun! TestF() "{{{
+    if isdirectory("./application/tests")
+        execute "cd application/tests"
+    endif
+    execute 'TestFile'
+    if isdirectory("../application/")
+        execute "cd ../.."
+    endif
+endfunction "}}}
+
+command! -nargs=* TF call TestF()
+
+fun! TestL() "{{{
+    if isdirectory("./application/tests")
+        execute "cd application/tests"
+    endif
+    execute 'TestLast'
+    if isdirectory("../application/")
+        execute "cd ../.."
+    endif
+endfunction "}}}
+
+command! -nargs=* TL call TestL()
+
+fun! TestS() "{{{
+    if isdirectory("./application/tests")
+        execute "cd application/tests"
+    endif
+    execute 'TestSuite'
+    if isdirectory("../application/")
+        execute "cd ../.."
+    endif
+endfunction "}}}
+
+command! -nargs=* TS call TestS()
+
+fun! TestV() "{{{
+    if isdirectory("./application/tests")
+        execute "cd application/tests"
+    endif
+    execute 'TestVisit'
+    if isdirectory("../application/")
+        execute "cd ../.."
+    endif
+endfunction "}}}
+
+command! -nargs=* TV call TestV()
 "COLORSCHEME CUSTOMIZATION
 "--------------
 "custom colorscheme, you can configure your favorite colorscheme depending on
