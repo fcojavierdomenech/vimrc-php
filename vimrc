@@ -164,19 +164,19 @@ Plug 'othree/html5.vim'
 Plug 'hail2u/vim-css3-syntax'
 
 "YankRing maintains a history of previous yanks, changes and deletes
-Plug 'YankRing.vim'
+Plug 'vim-scripts/YankRing.vim'
 
 "extended % matching for HTML, LateX and many other languages
-Plug 'matchit.zip'
+Plug 'vim-scripts/matchit.zip'
 
 "a vim plugin to perform vimdiffs on blocks of code (not only all the file)
 Plug 'AndrewRadev/linediff.vim'
 
 "save and manage macros
-Plug 'marvim'
+Plug 'vim-scripts/marvim'
 
 "a plugin for automatically restoring file's cursor position and folding
-Plug 'restore_view.vim'
+Plug 'vim-scripts/restore_view.vim'
 
 "syntastic
 Plug 'scrooloose/syntastic'
@@ -200,6 +200,7 @@ Plug 'junegunn/vim-oblique'
 "Git plugs
 Plug 'tpope/vim-fugitive'
 Plug 'gregsexton/gitv'
+Plug 'airblade/vim-gitgutter'
 
 "Surround plugin
 Plug 'tpope/vim-surround'
@@ -238,7 +239,11 @@ Plug 'Valloric/MatchTagAlways'
 Plug 'mbbill/undotree'
 
 "phpcomplete
-Plug 'shawncplus/phpcomplete.vim'
+"Plug 'shawncplus/phpcomplete.vim'
+
+"PHPCD
+Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
+autocmd FileType php setlocal omnifunc=phpcd#CompletePHP
 
 "helps to fix the root directory of the project whatever is the file opened
 Plug 'airblade/vim-rooter'
@@ -248,6 +253,12 @@ Plug 'EvanDotPro/vim-php-syntax-check'
 
 "Twig syntax highlighting
 Plug 'evidens/vim-twig'
+
+"testing utility
+Plug 'janko-m/vim-test'
+
+"interacting with tmux
+Plug 'benmills/vimux'
 
 call plug#end()
 
@@ -387,10 +398,18 @@ set runtimepath+=~/.vim/vimrc-php
 let g:UltiSnipsSnippetsDir="~/.vim/vimrc-php/UltiSnips"
 "let g:UltiSnipsSnippetDirectories=[$HOME."/.vim/vimrc-php/UltiSnips"]
 
+"for Laravel blade templates being recognized as html
+autocmd BufNewFile,BufRead *.blade.php setlocal ft=html
+
+"FUGITIVE
+"---------------------------------
+set diffopt+=vertical
+
 
 "SYNTASTIC
 "---------------------------------
 
+"set statusline+=%{fugitive#statusline()}
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
@@ -649,6 +668,74 @@ fun! RemoveTrailingSpaces() "{{{
 endfunction "}}}
 command! -nargs=* RemoveTrailingSpaces call RemoveTrailingSpaces()
 
+"TESTING
+fun! TestN() "{{{
+    if isdirectory("./application/tests")
+        execute "cd application/tests"
+    endif
+    "execute 'VimuxRunCommand TestNearest'
+    execute 'TestNearest'
+    if isdirectory("../application/")
+        execute "cd ../.."
+    endif
+endfunction "}}}
+
+command! -nargs=* TN call TestN()
+
+fun! TestF() "{{{
+    if isdirectory("./application/tests")
+        execute "cd application/tests"
+    endif
+    execute 'TestFile'
+    if isdirectory("../application/")
+        execute "cd ../.."
+    endif
+endfunction "}}}
+
+command! -nargs=* TF call TestF()
+
+fun! TestL() "{{{
+    if isdirectory("./application/tests")
+        execute "cd application/tests"
+    endif
+    execute 'TestLast'
+    if isdirectory("../application/")
+        execute "cd ../.."
+    endif
+endfunction "}}}
+
+command! -nargs=* TL call TestL()
+
+fun! TestS() "{{{
+    if isdirectory("./application/tests")
+        execute "cd application/tests"
+    endif
+    execute 'TestSuite'
+    if isdirectory("../application/")
+        execute "cd ../.."
+    endif
+endfunction "}}}
+
+command! -nargs=* TS call TestS()
+
+fun! TestV() "{{{
+    if isdirectory("./application/tests")
+        execute "cd application/tests"
+    endif
+    execute 'TestVisit'
+    if isdirectory("../application/")
+        execute "cd ../.."
+    endif
+endfunction "}}}
+
+command! -nargs=* TV call TestV()
+
+
+fun! InitPhpcdCodeigniter() "{{{
+    execute "!php ~/.config/nvim/plugged/phpcd.vim/php/main.php . msgpack application/config/autoload.php &"
+endfunction "}}}
+
+command! -nargs=* InitPhpcdCI call InitPhpcdCodeigniter()
 
 "COLORSCHEME CUSTOMIZATION
 "--------------
