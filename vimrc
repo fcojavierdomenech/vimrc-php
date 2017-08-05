@@ -246,6 +246,9 @@ Plug 'airblade/vim-rooter'
 "php simple syntax error checker
 Plug 'EvanDotPro/vim-php-syntax-check'
 
+"Twig syntax highlighting
+Plug 'evidens/vim-twig'
+
 call plug#end()
 
 
