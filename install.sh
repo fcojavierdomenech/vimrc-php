@@ -1,7 +1,3 @@
-##BEFORE ANYTHING
-#Download eclipse and place it at the $HOME dir: https://eclipse.org/downloads/
-#Download eclim, use eclim installer, download and place it at the $HOME dir: http://sourceforge.net/projects/eclim/files/eclim/
-
 cd ~/.vim
 
 #composer is required
@@ -29,27 +25,7 @@ printf "\n\n...finishing...\n\n"
 #XCLIP so you can copy paste with ctrl+c ctrl+v
 sudo apt-get install xclip
 
-#You probably need also to install vim-nox in order to use YouCompleteMe
-sudo apt-get install vim-nox
-
-#IDE-HELPER for laravel
-#ide-helper for composer projects (vendor libs autocomplete)
-composer require barryvdh/laravel-ide-helper
-
-#Now from the framework-project root run: `php artisan ide-helper:generate`
-#also, it'll help if you extend your models to \Eloquent instead of \Model
-
-##PHPCD extras
-sudo pecl install msgpack
-
 cd ~/
-
-##ECLIM
-#don't use eclipse installer, better untar directly
-tar -xvzf ~/eclipse*.gz
-
-#to install the downloaded jar:
-java -jar eclim_2.6.0.jar
 
 #install patched font for terminal (copying to ~/.local/share/fonts  closing all terminal windows and editing settings)
 mkdir ~/.local/share/fonts

@@ -42,20 +42,23 @@ function ${1} ($3) {
 }
 endsnippet
 
-snippet html-temp "HTML basic template" b
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>${1}</title>
-	<link rel="stylesheet" href="${2}">
-</head>
-<body>
+snippet prot "protected + @var" {
+/** @var `!p snip.rv = t[1].title()` $1 */
+protected $${1};
+endsnippet
 
-${3}
+snippet prot "public + @var" {
+	/** @var `!p snip.rv = t[1].title()` $1 */
+	public $${1};
+endsnippet
 
-</body>
-</html>
+snippet prot "private + @var" {
+	/** @var `!p snip.rv = t[1].title()` $1 */
+	private $${1};
+endsnippet
+
+snippet @var "@var" {
+	/** @var `!p snip.rv = t[1].title()` $1 */
 endsnippet
 
 snippet <h "HTML header" b
@@ -389,4 +392,3 @@ endsnippet
 snippet ci_session_set_flashdata
 $this->session->set_flashdata("${1:item}", "${2:value}");${3}
 endsnippet
-

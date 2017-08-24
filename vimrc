@@ -140,9 +140,6 @@ Plug 'pangloss/vim-javascript'
 "code completion with 'tab'
 Plug 'ervandew/supertab'
 
-"automaticatically complete
-"Plug 'Valloric/YouCompleteMe'
-
 "one colorscheme to rule them all lol
 Plug 'flazz/vim-colorschemes'
 
@@ -240,7 +237,10 @@ Plug 'mbbill/undotree'
 Plug 'airblade/vim-rooter'
 
 "php simple syntax error checker
-"Plug 'EvanDotPro/vim-php-syntax-check'
+Plug 'EvanDotPro/vim-php-syntax-check'
+
+"Twig syntax highlighting
+Plug 'evidens/vim-twig'
 
 "testing utility
 Plug 'janko-m/vim-test'
@@ -257,13 +257,20 @@ Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
 Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
 " (optional) php completion via LanguageClient-neovim
 Plug 'roxma/LanguageServer-php-neovim',  {'do': 'composer install && composer run-script parse-stubs'}
+" (optional) php completion via LanguageClient-neovim
+Plug 'chrisbra/Colorizer'
+"psr-2 syntax checker
+Plug 'stephpy/vim-php-cs-fixer'
+
+"xdebug debugger
+Plug 'joonty/vdebug'
 
 call plug#end()
 
-autocmd FileType php LanguageClientStart
+"autocmd FileType php LanguageClientStart
 
 " Automatically start language servers.
-let g:LanguageClient_autoStart = 1
+" let g:LanguageClient_autoStart = 1
 
 nnoremap I :call LanguageClient_textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
@@ -284,8 +291,6 @@ nnoremap } ]}
 vmap { [{
 vmap } ]}
 nnoremap <F12> :set list lcs=tab:\|\
-inoremap <C-Space> <esc>:call LanguageClientRestart()<CR>a
-inoremap <C-@> :call LanguageClientRestart()<CR>
 " when diff mode
 nnoremap dn ]c
 nnoremap dN [c
@@ -304,15 +309,17 @@ inoremap <silent> <F9> <esc> :YRShow<CR>
 " NERDTREE
 nnoremap <Leader>t :Tree<Enter>
 " CTRLP
-"nnoremap <Leader>l :LocateFile<Enter>
 map <Leader>s :CtrlP<Enter>
+"nmap <C-p> :CtrlP<Enter>
+" Ag
+map <C-a> :Ag<Enter>
 "nnoremap <Leader>s :!grep -IirlZ "pattern" .|xargs -0 vim
 nnoremap <Leader>f :grep <C-r><C-w> **/*.php | cw
 "check errors
 nmap <Leader>e :!php -l %<Enter>
-" Run PHPUnit tests
-map <Leader>pu :!clear && vendor/phpunit/phpunit/phpunit <cr>
-let test#strategy = "neovim"
+"let test#strategy = "neovim"
+"let test#filename_modifier = ':p'
+let test#strategy = "basic"
 
 " UNDOTREE
 nnoremap <Leader>u :call UndotreeToggle()<CR>:call UndotreeFocus()<CR>
@@ -339,6 +346,10 @@ nnoremap <unique> <Leader>g :call CallGoogle()<CR>
 "mapping OpenBrowserSmartSearch function
 nnoremap <Leader>d <C-]>
 
+map <F1> <esc>
+
+"disable comments with new line
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 """"""""""""""""""""""""""""""""""""""
 " Plugins: specific plugin configuration and mappings
 """"""""""""""""""""""""""""""""""""""
@@ -352,25 +363,6 @@ function CallGoogle()
 :endfunction
 
 command! -nargs=* CallGoogle call CallGoogle()
-
-"ECLIM
-"---------------------------------
-let g:EclimCompletionMethod = 'omnifunc'
-function IniEclim()
-	if !filereadable("~/workspace/.metadata/.lock")
-		execute "!~/eclipse/eclimd &> /dev/null &"
-        autocmd Filetype php setlocal omnifunc=eclim#php#complete#CodeComplete
-	endif
-:endfunction
-
-function IniEclimVerbose()
-    if !filereadable("~/workspace/.metadata/.lock")
-        execute "!~/eclipse/eclimd&"
-    endif
-:endfunction
-
-command! -nargs=* IniEclim call IniEclim()
-command! -nargs=* IniEclimVerbose call IniEclimVerbose()
 
 "AUTOCOMPLETE: YouCompleteMe
 "---------------------------------
@@ -514,6 +506,7 @@ command! -nargs=* M call M()
 let g:SuperTabDefaultCompletionType = "context"
 
 inoremap <C-@> <C-x><C-o><C-p>
+inoremap <C-Space> <C-x><C-o><C-p>
 
 set completeopt=longest,menuone
 
@@ -573,13 +566,12 @@ let g:airline_theme = 'bubblegum'
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#branch#enabled = 1
 let g:airline_powerline_fonts = 1
-let g:airline#extensions#eclim#enabled = 1
 let g:airline#extensions#whitespace#mixed_indent_algo = 1
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 let g:airline_section_b = '%{fnamemodify(getcwd(),":t")}'
+let g:airline#extensions#tagbar#flags = 'f'  " show full tag hierarchy
 set ttimeoutlen=50
 set laststatus=2
-
 
  """"""""""""""""""""""
  " HELPER FUNCTIONS
@@ -685,72 +677,34 @@ command! -nargs=* RemoveTrailingSpaces call RemoveTrailingSpaces()
 
 "TESTING
 fun! TestN() "{{{
-    if isdirectory("./application/tests")
-        execute "cd application/tests"
-    endif
-    "execute 'VimuxRunCommand TestNearest'
     execute 'TestNearest'
-    if isdirectory("../application/")
-        execute "cd ../.."
-    endif
 endfunction "}}}
 
 command! -nargs=* TN call TestN()
 
 fun! TestF() "{{{
-    if isdirectory("./application/tests")
-        execute "cd application/tests"
-    endif
     execute 'TestFile'
-    if isdirectory("../application/")
-        execute "cd ../.."
-    endif
 endfunction "}}}
 
 command! -nargs=* TF call TestF()
 
 fun! TestL() "{{{
-    if isdirectory("./application/tests")
-        execute "cd application/tests"
-    endif
     execute 'TestLast'
-    if isdirectory("../application/")
-        execute "cd ../.."
-    endif
 endfunction "}}}
 
 command! -nargs=* TL call TestL()
 
 fun! TestS() "{{{
-    if isdirectory("./application/tests")
-        execute "cd application/tests"
-    endif
     execute 'TestSuite'
-    if isdirectory("../application/")
-        execute "cd ../.."
-    endif
 endfunction "}}}
 
 command! -nargs=* TS call TestS()
 
 fun! TestV() "{{{
-    if isdirectory("./application/tests")
-        execute "cd application/tests"
-    endif
     execute 'TestVisit'
-    if isdirectory("../application/")
-        execute "cd ../.."
-    endif
 endfunction "}}}
 
 command! -nargs=* TV call TestV()
-
-
-fun! InitPhpcdCodeigniter() "{{{
-    execute "!php ~/.config/nvim/plugged/phpcd.vim/php/main.php . msgpack application/config/autoload.php &"
-endfunction "}}}
-
-command! -nargs=* InitPhpcdCI call InitPhpcdCodeigniter()
 
 "COLORSCHEME CUSTOMIZATION
 "--------------
@@ -798,3 +752,46 @@ fun! LanguageClientRestart() "{{{
 endfunction "}}}
 
 command! -nargs=* LanguageClientRestart call LanguageClientRestart()
+
+
+" Put at the very end of your .vimrc file.
+
+function! PhpSyntaxOverride()
+    "hi! def link phpDocTags  phpDefine
+    "hi! def link phpDocParam phpType
+    hi! phpTodo  ctermfg=120
+    hi! phpDocTags  ctermfg=241
+    hi! phpDocParam ctermfg=243
+endfunction
+
+augroup phpSyntaxOverride
+    autocmd!
+    autocmd FileType php call PhpSyntaxOverride()
+augroup END
+
+" ----------------------------------------------------------------------------
+" DiffRev
+" ----------------------------------------------------------------------------
+let s:git_status_dictionary = {
+            \ "A": "Added",
+            \ "B": "Broken",
+            \ "C": "Copied",
+            \ "D": "Deleted",
+            \ "M": "Modified",
+            \ "R": "Renamed",
+            \ "T": "Changed",
+            \ "U": "Unmerged",
+            \ "X": "Unknown"
+            \ }
+function! s:get_diff_files(rev)
+    let list = map(split(system(
+                \ 'git diff --name-status '.a:rev), '\n'),
+                \ '{"filename":matchstr(v:val, "\\S\\+$"),"text":s:git_status_dictionary[matchstr(v:val, "^\\w")]}'
+                \ )
+    call setqflist(list)
+    copen
+endfunction
+
+command! -nargs=1 DiffRev call s:get_diff_files(<q-args>)
+
+

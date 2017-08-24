@@ -16,8 +16,14 @@ I'm used to start vim from the project root directory.
 
 ### BEFORE GOING ON WITH THE install.sh:
 
-Download eclipse and place it at the $HOME dir: https://eclipse.org/downloads/
-
-Download eclim, use eclim installer, download and place it at the $HOME dir: http://sourceforge.net/projects/eclim/files/eclim/
-
 Donwload a patched font of your like for coding, this is mine: https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/SourceCodePro/Medium/complete/Sauce%20Code%20Pro%20Medium%20Nerd%20Font%20Complete%20Mono.ttf and place it at the $HOME dir
+
+For laravel projects code-intellisense:
+    ide-helper for composer projects (vendor libs autocomplete)
+    `composer require barryvdh/laravel-ide-helper`
+
+    Now from the framework-project root run: `php artisan ide-helper:generate`
+    also, it'll help if you extend your models to \Eloquent instead of \Model
+
+For debugging capabilities, Vdebug it's used, see github for installation/usage instructions: https://github.com/joonty/vdebug
+
