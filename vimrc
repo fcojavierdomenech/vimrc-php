@@ -116,11 +116,6 @@ hi FoldColumn ctermbg=None
 hi CursorLine cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 
 
-command! -nargs=* Day call Day()
-command! -nargs=* Night call Night()
-
-
-
 """"""""""""""""""""""""
 "DOWNLOADING PLUGINS: using vim-plug https://github.com/junegunn/vim-plug
 """"""""""""""""""""""""
@@ -146,7 +141,7 @@ Plug 'pangloss/vim-javascript'
 Plug 'ervandew/supertab'
 
 "automaticatically complete
-Plug 'Valloric/YouCompleteMe'
+"Plug 'Valloric/YouCompleteMe'
 
 "one colorscheme to rule them all lol
 Plug 'flazz/vim-colorschemes'
@@ -241,15 +236,11 @@ Plug 'mbbill/undotree'
 "phpcomplete
 "Plug 'shawncplus/phpcomplete.vim'
 
-"PHPCD
-Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
-autocmd FileType php setlocal omnifunc=phpcd#CompletePHP
-
 "helps to fix the root directory of the project whatever is the file opened
 Plug 'airblade/vim-rooter'
 
 "php simple syntax error checker
-Plug 'EvanDotPro/vim-php-syntax-check'
+"Plug 'EvanDotPro/vim-php-syntax-check'
 
 "testing utility
 Plug 'janko-m/vim-test'
@@ -257,14 +248,31 @@ Plug 'janko-m/vim-test'
 "interacting with tmux
 Plug 'benmills/vimux'
 
+"Testing better completion
+" the framework
+Plug 'roxma/nvim-completion-manager'
+" (optional) javascript completion
+Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
+" (optional) language server protocol framework
+Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
+" (optional) php completion via LanguageClient-neovim
+Plug 'roxma/LanguageServer-php-neovim',  {'do': 'composer install && composer run-script parse-stubs'}
+
 call plug#end()
 
+autocmd FileType php LanguageClientStart
 
+" Automatically start language servers.
+let g:LanguageClient_autoStart = 1
+
+nnoremap I :call LanguageClient_textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
 """"""""""""""""""""""
 "MAPPINGS: custom mappings
 """"""""""""""""""""""
 nnoremap <unique> <Leader>rv :call PhpRenameLocalVariable()<CR>
 map <Space> <Leader>
+imap <C-z> <esc><C-z>
 nnoremap j gj
 nnoremap k gk
 nnoremap <C-h> <C-w>h
@@ -276,7 +284,8 @@ nnoremap } ]}
 vmap { [{
 vmap } ]}
 nnoremap <F12> :set list lcs=tab:\|\
-inoremap <C-@> <C-x><C-u>
+inoremap <C-Space> <esc>:call LanguageClientRestart()<CR>a
+inoremap <C-@> :call LanguageClientRestart()<CR>
 " when diff mode
 nnoremap dn ]c
 nnoremap dN [c
@@ -303,6 +312,8 @@ nnoremap <Leader>f :grep <C-r><C-w> **/*.php | cw
 nmap <Leader>e :!php -l %<Enter>
 " Run PHPUnit tests
 map <Leader>pu :!clear && vendor/phpunit/phpunit/phpunit <cr>
+let test#strategy = "neovim"
+
 " UNDOTREE
 nnoremap <Leader>u :call UndotreeToggle()<CR>:call UndotreeFocus()<CR>
 
@@ -325,14 +336,12 @@ au FileType c,cpp,php,java,js setlocal comments-=:// comments+=f://
 
 "mapping OpenBrowserSmartSearch function
 nnoremap <unique> <Leader>g :call CallGoogle()<CR>
+"mapping OpenBrowserSmartSearch function
+nnoremap <Leader>d <C-]>
 
 """"""""""""""""""""""""""""""""""""""
 " Plugins: specific plugin configuration and mappings
 """"""""""""""""""""""""""""""""""""""
-
-" VIM-SYNC
-"nnoremap <leader>up :call SyncUploadFile()<CR>
-"nnoremap <leader>dw :call SyncDownloadFile()<CR>
 
 " OPEN-BROWSER
 "---------------------------------
@@ -443,6 +452,7 @@ let g:yankring_max_element_length = 8388608 " 8M
 
 "NERDTREE
 "---------------------------------
+
 fun! Tree() "{{{
 	if g:is_nerd_tree_opened==1
 		let g:is_nerd_tree_opened=0
@@ -456,7 +466,7 @@ command! -nargs=* Tree call Tree()
 
 "Open NERDTree if no files specified
 autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") |let g:is_nerd_tree_opened=1 | NERDTree | else |  let g:is_nerd_tree_opened=0 | endif
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") |let g:is_nerd_tree_opened=1 | NERDTree | wincmd l | M | else |  let g:is_nerd_tree_opened=0 | endif
 
 "Close NERDTree if it's the last window
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
@@ -465,8 +475,10 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTree
 let NERDTreeShowBookmarks=1
 let NERDTreeWinSize=55
 
+
 "MRU (CRTLP)
 "---------------------------------
+
 fun! MV() "{{{
 	vsp
 	execute "CtrlPMRUFiles"
@@ -501,15 +513,14 @@ command! -nargs=* M call M()
 "SUPERTAB + PHPCOMPLETE
 let g:SuperTabDefaultCompletionType = "context"
 
-inoremap <C-@> <C-x><C-o><C-o><C-p>
+inoremap <C-@> <C-x><C-o><C-p>
 
 set completeopt=longest,menuone
-autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
-let g:phpcomplete_relax_static_constraint = 1
-let g:phpcomplete_parse_docblock_comments = 1
+
 
 "encode/decode HTML
 "--------------------------------
+
 nnoremap <silent> <Leader>h :silent %!perl -CIO -MHTML::Entities -pe '$_=encode_entities $_'<CR>
 vnoremap <silent> <Leader>h :<C-u>silent '<,'>!perl -CIO -MHTML::Entities -pe '$_=encode_entities $_'<CR>
 nnoremap <silent> <Leader>H :silent %!perl -CI  -MHTML::Entities -pe '$_=decode_entities $_'<CR>
@@ -518,20 +529,28 @@ vnoremap <silent> <Leader>H :<C-u>silent '<,'>!perl -CI  -MHTML::Entities -pe '$
 
 "REMEMBER
 "--------------------------------
+
 set viewoptions=cursor,folds,slash,unix
 let g:skipview_files = ['*\.vim']
 
+
 "GREPLACE
 "--------------------------------
+
 set grepprg=ag    "we ant to use ag for the search
 let g:grep_cmd_opts = '--line-numbers --noheading'
 
+
 "CALENDAR
+"--------------------------------
+
 let g:calendar_google_calendar = 1
 let g:calendar_google_task = 1
 
+
 "PHP-NAMESPACE
 "--------------------------------
+
 function! IPhpInsertUse()
     call PhpInsertUse()
     call feedkeys('a',  'n')
@@ -539,8 +558,10 @@ endfunction
 "autocmd FileType php inoremap <Leader>u <Esc>:call IPhpInsertUse()<CR>
 autocmd FileType php noremap <Leader>ns :call PhpInsertUse()<CR>
 
+
 "AIRLINE
 "--------------------------------
+
 if !exists('g:airline_symbols')
 	let g:airline_symbols = {}
 endif
@@ -557,10 +578,8 @@ let g:airline#extensions#whitespace#mixed_indent_algo = 1
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 let g:airline_section_b = '%{fnamemodify(getcwd(),":t")}'
 set ttimeoutlen=50
+set laststatus=2
 
-
-
-:set laststatus=2
 
  """"""""""""""""""""""
  " HELPER FUNCTIONS
@@ -620,7 +639,6 @@ function! DiffToggle(mode) range
 "TAGBAR + TAG GENERATION
 "--------------
 nnoremap <leader>j :split<CR>:exec("tag ".expand("<cword>"))<CR>
-nnoremap <leader>k <C-T>
 
 "map <A-i> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
 
@@ -767,5 +785,16 @@ fun! Night() "{{{
     autocmd BufRead,BufNewFile * syn match parens /[(){}]/ | hi parens ctermfg=blue
 endfunction "}}}
 
+command! -nargs=* Day call Day()
+command! -nargs=* Night call Night()
+
 Night()
 
+
+
+fun! LanguageClientRestart() "{{{
+    execute 'LanguageClientStop'
+    execute 'LanguageClientStart'
+endfunction "}}}
+
+command! -nargs=* LanguageClientRestart call LanguageClientRestart()
