@@ -265,15 +265,21 @@ Plug 'stephpy/vim-php-cs-fixer'
 "xdebug debugger
 Plug 'joonty/vdebug'
 
+"fuzzy finder
+" PlugInstall and PlugUpdate will clone fzf in ~/.fzf and run install script
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+
 call plug#end()
 
-"autocmd FileType php LanguageClientStart
+autocmd FileType php LanguageClientStart
 
 " Automatically start language servers.
 " let g:LanguageClient_autoStart = 1
 
 nnoremap I :call LanguageClient_textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+nnoremap <silent> gr :call LanguageClient_textDocument_references()<CR>
 """"""""""""""""""""""
 "MAPPINGS: custom mappings
 """"""""""""""""""""""
@@ -373,7 +379,7 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 "VIM-ROOTER
 "---------------------------------
 "what kind of files determine whether a directory is root
-let g:rooter_patterns = ['.project', '.git/']
+let g:rooter_patterns = ['.git/']
 au BufEnter * Rooter
 
 "UNDOTREE
@@ -794,4 +800,10 @@ endfunction
 
 command! -nargs=1 DiffRev call s:get_diff_files(<q-args>)
 
+"setting vdebug path
+if !exists('g:vdebug_options')
+    let g:vdebug_options = {}
+endif
+"let g:vdebug_options['path_maps'] = {"/var/www/html/micobe/": "/var/www/current/test/"}
+let g:vdebug_options['path_maps'] = {"/var/www/current/test/": "/var/www/html/micobe/"}
 
