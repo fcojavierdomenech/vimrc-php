@@ -203,17 +203,11 @@ Plug 'rking/ag.vim'
 "Project replace plugin
 Plug 'skwp/greplace.vim'
 
-"Php refactoring tools
-Plug 'adoy/vim-php-refactoring-toolbox'
-
 "abolish heps handling words with substitutions abreviations and so
 Plug 'tpope/vim-abolish'
 
 "vim php syntax improvement
 Plug 'StanAngeloff/php.vim'
-
-"types 'use' statements for you
-Plug 'arnaud-lb/vim-php-namespace'
 
 "Calendar
 Plug 'itchyny/calendar.vim'
@@ -229,9 +223,6 @@ Plug 'Valloric/MatchTagAlways'
 
 "undo history visualizer
 Plug 'mbbill/undotree'
-
-"phpcomplete
-"Plug 'shawncplus/phpcomplete.vim'
 
 "helps to fix the root directory of the project whatever is the file opened
 Plug 'airblade/vim-rooter'
@@ -249,37 +240,28 @@ Plug 'janko-m/vim-test'
 Plug 'benmills/vimux'
 
 "Testing better completion
-" the framework
 Plug 'roxma/nvim-completion-manager'
+
 " (optional) javascript completion
 Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
-" (optional) language server protocol framework
-Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
-" (optional) php completion via LanguageClient-neovim
-Plug 'roxma/LanguageServer-php-neovim',  {'do': 'composer install && composer run-script parse-stubs'}
-" (optional) php completion via LanguageClient-neovim
+
+" (optional) colorizer
 Plug 'chrisbra/Colorizer'
+
 "psr-2 syntax checker
 Plug 'stephpy/vim-php-cs-fixer'
 
 "xdebug debugger
 Plug 'joonty/vdebug'
 
-"fuzzy finder
-" PlugInstall and PlugUpdate will clone fzf in ~/.fzf and run install script
+"fuzzy finder: PlugInstall and PlugUpdate will clone fzf in ~/.fzf and run install script
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
+Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
+
 call plug#end()
 
-autocmd FileType php LanguageClientStart
-
-" Automatically start language servers.
-" let g:LanguageClient_autoStart = 1
-
-nnoremap I :call LanguageClient_textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
-nnoremap <silent> gr :call LanguageClient_textDocument_references()<CR>
 """"""""""""""""""""""
 "MAPPINGS: custom mappings
 """"""""""""""""""""""
@@ -324,7 +306,6 @@ nnoremap <Leader>f :grep <C-r><C-w> **/*.php | cw
 "check errors
 nmap <Leader>e :!php -l %<Enter>
 "let test#strategy = "neovim"
-"let test#filename_modifier = ':p'
 let test#strategy = "basic"
 
 " UNDOTREE
@@ -547,17 +528,6 @@ let g:calendar_google_calendar = 1
 let g:calendar_google_task = 1
 
 
-"PHP-NAMESPACE
-"--------------------------------
-
-function! IPhpInsertUse()
-    call PhpInsertUse()
-    call feedkeys('a',  'n')
-endfunction
-"autocmd FileType php inoremap <Leader>u <Esc>:call IPhpInsertUse()<CR>
-autocmd FileType php noremap <Leader>ns :call PhpInsertUse()<CR>
-
-
 "AIRLINE
 "--------------------------------
 
@@ -578,6 +548,42 @@ let g:airline_section_b = '%{fnamemodify(getcwd(),":t")}'
 let g:airline#extensions#tagbar#flags = 'f'  " show full tag hierarchy
 set ttimeoutlen=50
 set laststatus=2
+
+"PHPACTOR
+"--------------------------------
+" Include use statement
+nmap <Leader>u :call phpactor#UseAdd()<CR>
+
+" Invoke the context menu
+nmap <Leader>mm :call phpactor#ContextMenu()<CR>
+
+" Invoke the navigation menu
+nmap <Leader>nn :call phpactor#Navigate()<CR>
+
+" Goto definition of class or class member under the cursor
+nmap <Leader>o :call phpactor#GotoDefinition()<CR>
+
+" Transform the classes in the current file
+nmap <Leader>tt :call phpactor#Transform()<CR>
+
+" Generate a new class (replacing the current file)
+nmap <Leader>cn :call phpactor#ClassNew()<CR>
+
+" Extract expression (normal mode)
+nmap <silent><Leader>ee :call phpactor#ExtractExpression(v:false)<CR>
+
+" Extract expression from selection
+vmap <silent><Leader>ee :<C-U>call phpactor#ExtractExpression(v:true)<CR>
+
+" Extract method from selection
+vmap <silent><Leader>em :<C-U>call phpactor#ExtractMethod()<CR>
+
+" Go to definition
+vmap <silent>gd :<C-U>call phpactor#GotoDefinition()<CR>
+" View references
+vmap <silent>gr :<C-U>call phpactor#FindReferences()<CR>
+" Import namespace
+vmap <silent><Leader>ns :<C-U>call phpactor#GotoDefinition()<CR>
 
  """"""""""""""""""""""
  " HELPER FUNCTIONS
@@ -750,17 +756,21 @@ command! -nargs=* Night call Night()
 
 Night()
 
+"Phpactor
+"--------------
+function! IsComposerProject()
+    if filereadable("composer.json")
+        echo "Found Composer.json: autocompletion will use Phpactor :-)"
+        autocmd FileType php setlocal omnifunc=phpactor#Complete
+    endif
+endfunction
 
-
-fun! LanguageClientRestart() "{{{
-    execute 'LanguageClientStop'
-    execute 'LanguageClientStart'
-endfunction "}}}
-
-command! -nargs=* LanguageClientRestart call LanguageClientRestart()
+command! -nargs=* IsComposerProject call IsComposerProject()
+IsComposerProject()
 
 
 " Put at the very end of your .vimrc file.
+"-----------------------------------------
 
 function! PhpSyntaxOverride()
     "hi! def link phpDocTags  phpDefine

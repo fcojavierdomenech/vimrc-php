@@ -26,4 +26,5 @@ For laravel projects code-intellisense:
     also, it'll help if you extend your models to \Eloquent instead of \Model
 
 For debugging capabilities, Vdebug it's used, see github for installation/usage instructions: https://github.com/joonty/vdebug
+Xdebug installation: https://xdebug.org/wizard.php
 
