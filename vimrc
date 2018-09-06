@@ -561,8 +561,9 @@ nmap <Leader>mm :call phpactor#ContextMenu()<CR>
 nmap <Leader>nn :call phpactor#Navigate()<CR>
 
 " Goto definition of class or class member under the cursor
-nmap <Leader>o :call phpactor#GotoDefinition()<CR>
-
+nmap gd :call phpactor#GotoDefinition()<CR>
+" Goto references of class or class member under the cursor
+nmap gr :call phpactor#ClassReferences()<CR>
 " Transform the classes in the current file
 nmap <Leader>tt :call phpactor#Transform()<CR>
 
@@ -577,13 +578,6 @@ vmap <silent><Leader>ee :<C-U>call phpactor#ExtractExpression(v:true)<CR>
 
 " Extract method from selection
 vmap <silent><Leader>em :<C-U>call phpactor#ExtractMethod()<CR>
-
-" Go to definition
-vmap <silent>gd :<C-U>call phpactor#GotoDefinition()<CR>
-" View references
-vmap <silent>gr :<C-U>call phpactor#FindReferences()<CR>
-" Import namespace
-vmap <silent><Leader>ns :<C-U>call phpactor#GotoDefinition()<CR>
 
  """"""""""""""""""""""
  " HELPER FUNCTIONS
