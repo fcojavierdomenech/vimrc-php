@@ -260,6 +260,12 @@ Plug 'junegunn/fzf.vim'
 
 Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
 
+" Require ncm2 and this plugin
+Plug 'ncm2/ncm2'
+Plug 'roxma/nvim-yarp'
+Plug 'phpactor/ncm2-phpactor'
+Plug 'ncm2/ncm2-ultisnips'
+
 call plug#end()
 
 """"""""""""""""""""""
@@ -301,6 +307,7 @@ map <Leader>s :CtrlP<Enter>
 "nmap <C-p> :CtrlP<Enter>
 " Ag
 map <C-a> :Ag<Enter>
+:command Ag "Ag!"
 "nnoremap <Leader>s :!grep -IirlZ "pattern" .|xargs -0 vim
 nnoremap <Leader>f :grep <C-r><C-w> **/*.php | cw
 "check errors
@@ -340,6 +347,11 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 """"""""""""""""""""""""""""""""""""""
 " Plugins: specific plugin configuration and mappings
 """"""""""""""""""""""""""""""""""""""
+
+" NCM2
+"---------------------------------
+autocmd BufEnter * call ncm2#enable_for_buffer()
+set completeopt=noinsert,menuone,noselect
 
 " OPEN-BROWSER
 "---------------------------------
@@ -490,12 +502,10 @@ command! -nargs=* Mon call Mon()
 command! -nargs=* M call M()
 
 "SUPERTAB + PHPCOMPLETE
-let g:SuperTabDefaultCompletionType = "context"
+let g:SuperTabDefaultCompletionType = "<c-o>"
 
 inoremap <C-@> <C-x><C-o><C-p>
 inoremap <C-Space> <C-x><C-o><C-p>
-
-set completeopt=longest,menuone
 
 
 "encode/decode HTML
@@ -804,10 +814,18 @@ endfunction
 
 command! -nargs=1 DiffRev call s:get_diff_files(<q-args>)
 
+
+" ----------------------------------------------------------------------------
+" VDebug
+" ----------------------------------------------------------------------------
 "setting vdebug path
 if !exists('g:vdebug_options')
     let g:vdebug_options = {}
 endif
 "let g:vdebug_options['path_maps'] = {"/var/www/html/micobe/": "/var/www/current/test/"}
 let g:vdebug_options['path_maps'] = {"/var/www/current/test/": "/var/www/html/micobe/"}
+
+let g:vdebug_options = {
+            \'break_on_open': 0
+            \}
 
