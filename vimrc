@@ -363,11 +363,9 @@ function CallGoogle()
 
 command! -nargs=* CallGoogle call CallGoogle()
 
-"AUTOCOMPLETE: YouCompleteMe
+"AUTOCOMPLETE: NVM2
 "---------------------------------
-let g:ycm_min_num_of_chars_for_completion = 1
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_collect_identifiers_from_tags_files = 1
+inoremap <expr> <CR> (pumvisible() ? "\<c-y>" : "\<CR>")
 
 "VIM-ROOTER
 "---------------------------------
