@@ -239,9 +239,6 @@ Plug 'janko-m/vim-test'
 "interacting with tmux
 Plug 'benmills/vimux'
 
-"Testing better completion
-Plug 'roxma/nvim-completion-manager'
-
 " (optional) javascript completion
 Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
 
@@ -265,6 +262,9 @@ Plug 'ncm2/ncm2'
 Plug 'roxma/nvim-yarp'
 Plug 'phpactor/ncm2-phpactor'
 Plug 'ncm2/ncm2-ultisnips'
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-tmux'
+Plug 'ncm2/ncm2-path'
 
 call plug#end()
 
@@ -499,7 +499,7 @@ command! -nargs=* MH call MH()
 command! -nargs=* Mon call Mon()
 command! -nargs=* M call M()
 
-"SUPERTAB + PHPCOMPLETE
+"SUPERTAB from top to bottom
 let g:SuperTabDefaultCompletionType = "<c-o>"
 
 inoremap <C-@> <C-x><C-o><C-p>
