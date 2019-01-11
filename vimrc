@@ -102,6 +102,7 @@ set undofile
 "colorscheme desert256
 "colorscheme distinguished
 colorscheme obsidian
+"colorscheme dracula
 
 "some modifications to the colorscheme
 "to view current settings use for instance ':hi Folded'
@@ -134,9 +135,6 @@ Plug 'vim-airline/vim-airline-themes'
 "plugin for comments
 Plug 'scrooloose/nerdcommenter'
 
-"javascript bundle: syntax and indent plugins
-Plug 'pangloss/vim-javascript'
-
 "code completion with 'tab'
 Plug 'ervandew/supertab'
 
@@ -155,6 +153,21 @@ Plug 'othree/html5.vim'
 "Better css syntax for Vim
 Plug 'hail2u/vim-css3-syntax'
 
+"javascript bundle: syntax and indent plugins
+Plug 'pangloss/vim-javascript'
+
+"vim php syntax improvement
+Plug 'StanAngeloff/php.vim'
+
+"Twig syntax highlighting
+Plug 'evidens/vim-twig'
+
+"psr-2 syntax checker
+Plug 'stephpy/vim-php-cs-fixer'
+
+"syntastic
+Plug 'scrooloose/syntastic'
+
 "YankRing maintains a history of previous yanks, changes and deletes
 Plug 'vim-scripts/YankRing.vim'
 
@@ -170,9 +183,6 @@ Plug 'vim-scripts/marvim'
 "a plugin for automatically restoring file's cursor position and folding
 Plug 'vim-scripts/restore_view.vim'
 
-"syntastic
-Plug 'scrooloose/syntastic'
-
 "tagbar
 Plug 'majutsushi/tagbar'
 
@@ -181,6 +191,9 @@ Plug 'SirVer/ultisnips'
 
 " Snippets are separated from the engine. Add this if you want them:
 Plug 'honza/vim-snippets'
+
+"For Symfony
+Plug 'sniphpets/sniphpets-symfony'
 
 "very useful his OpenServerSmartSearch function
 Plug 'tyru/open-browser.vim'
@@ -206,9 +219,6 @@ Plug 'skwp/greplace.vim'
 "abolish heps handling words with substitutions abreviations and so
 Plug 'tpope/vim-abolish'
 
-"vim php syntax improvement
-Plug 'StanAngeloff/php.vim'
-
 "Calendar
 Plug 'itchyny/calendar.vim'
 
@@ -227,29 +237,17 @@ Plug 'mbbill/undotree'
 "helps to fix the root directory of the project whatever is the file opened
 Plug 'airblade/vim-rooter'
 
-"php simple syntax error checker
-Plug 'EvanDotPro/vim-php-syntax-check'
-
-"Twig syntax highlighting
-Plug 'evidens/vim-twig'
-
 "testing utility
 Plug 'janko-m/vim-test'
 
 "interacting with tmux
 Plug 'benmills/vimux'
 
-"Testing better completion
-Plug 'roxma/nvim-completion-manager'
-
 " (optional) javascript completion
 Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
 
 " (optional) colorizer
 Plug 'chrisbra/Colorizer'
-
-"psr-2 syntax checker
-Plug 'stephpy/vim-php-cs-fixer'
 
 "xdebug debugger
 Plug 'joonty/vdebug'
@@ -258,6 +256,7 @@ Plug 'joonty/vdebug'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
+"Phpator refactoring and autocompletion
 Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
 
 " Require ncm2 and this plugin
@@ -265,6 +264,15 @@ Plug 'ncm2/ncm2'
 Plug 'roxma/nvim-yarp'
 Plug 'phpactor/ncm2-phpactor'
 Plug 'ncm2/ncm2-ultisnips'
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-tmux'
+Plug 'ncm2/ncm2-path'
+
+"Automatically document function, var, class..
+Plug 'tobyS/vmustache'
+Plug 'tobyS/pdv'
+
+let g:pdv_template_dir = $HOME ."/.vim/plugged/pdv/templates_snip"
 
 call plug#end()
 
@@ -311,9 +319,12 @@ map <C-a> :Ag<Enter>
 "nnoremap <Leader>s :!grep -IirlZ "pattern" .|xargs -0 vim
 nnoremap <Leader>f :grep <C-r><C-w> **/*.php | cw
 "check errors
-nmap <Leader>e :!php -l %<Enter>
+"nmap <Leader>e :!php -l %<Enter>
 "let test#strategy = "neovim"
 let test#strategy = "basic"
+"change to camelCase
+nnoremap + /\w\+_<CR>
+nnoremap - f_x~
 
 " UNDOTREE
 nnoremap <Leader>u :call UndotreeToggle()<CR>:call UndotreeFocus()<CR>
@@ -343,7 +354,7 @@ nnoremap <Leader>d <C-]>
 map <F1> <esc>
 
 "disable comments with new line
-autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+"autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 """"""""""""""""""""""""""""""""""""""
 " Plugins: specific plugin configuration and mappings
 """"""""""""""""""""""""""""""""""""""
@@ -410,15 +421,22 @@ set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 1
 "no annoying code sniffer errors
 let g:syntastic_php_checkers = ['php', 'phpmd']
 let g:syntastic_error_symbol='✗'
 let g:syntastic_warning_symbol='⚠'
-let g:syntastic_style_error_symbol = '✗'
+let g:syntastic_style_error_symbol = '⚠'
 let g:syntastic_style_warning_symbol = '⚠'
+let g:syntastic_enable_signs = 1
+let g:syntastic_enable_highlighting=0
+let g:syntastic_mode_map = {
+            \ "mode": "passive",
+            \ "active_filetypes": ["ruby", "php"],
+            \ "passive_filetypes": ["puppet"] }
+
 
 "PHP
 "---------------------------------
@@ -499,7 +517,7 @@ command! -nargs=* MH call MH()
 command! -nargs=* Mon call Mon()
 command! -nargs=* M call M()
 
-"SUPERTAB + PHPCOMPLETE
+"SUPERTAB from top to bottom
 let g:SuperTabDefaultCompletionType = "<c-o>"
 
 inoremap <C-@> <C-x><C-o><C-p>
@@ -586,6 +604,12 @@ vmap <silent><Leader>ee :<C-U>call phpactor#ExtractExpression(v:true)<CR>
 
 " Extract method from selection
 vmap <silent><Leader>em :<C-U>call phpactor#ExtractMethod()<CR>
+
+" Show brief information about the symbol under the cursor
+nmap <S-i> :call phpactor#Hover()<CR>
+
+" Show brief information about the symbol under the cursor
+nmap <Leader>e :call phpactor#ClassExpand()<CR>
 
  """"""""""""""""""""""
  " HELPER FUNCTIONS
@@ -827,3 +851,16 @@ let g:vdebug_options = {
             \'break_on_open': 0
             \}
 
+" ----------------------------------------------------------------------------
+" Php-cs-fixer
+" ----------------------------------------------------------------------------
+" If you want to define specific fixers:
+" If you use php-cs-fixer version 2.x
+let g:php_cs_fixer_rules = "@PSR2,no_unused_imports,no_useless_else,no_useless_return,align_multiline_comment"          " options: --rules (default:@PSR2)
+let g:php_cs_fixer_php_path = "php"               " Path to PHP
+let g:php_cs_fixer_enable_default_mapping = 1     " Enable the mapping by default (<leader>pcd)
+let g:php_cs_fixer_dry_run = 0                    " Call command with dry-run option
+let g:php_cs_fixer_verbose = 0
+
+
+command! -nargs=* Fix :execute PhpCsFixerFixFile() | :undo | :w | :redo | :DiffLastSaved

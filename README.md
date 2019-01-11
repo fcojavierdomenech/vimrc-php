@@ -1,6 +1,6 @@
 ### VIMRC-PHP
 
-Vim settings for php environments (also frameworks)
+Vim settings for php environments (also frameworks). I switched to neovim, so some plugin might not work on Vim.
 
 To install just clone this repo from your .vim folder and change the vimrc file to:
 `source ~/.vim/vimrc-php/vimrc`
@@ -28,3 +28,7 @@ For laravel projects code-intellisense:
 For debugging capabilities, Vdebug it's used, see github for installation/usage instructions: https://github.com/joonty/vdebug
 Xdebug installation: https://xdebug.org/wizard.php
 
+Optionally install these syntax checkers:
+composer global require friendsofphp/php-cs-fixer
+composer global require "phpmd/phpmd=*"
+composer global require "squizlabs/php_codesniffer=*"
