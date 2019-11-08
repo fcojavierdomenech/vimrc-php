@@ -101,8 +101,9 @@ set undofile
 "colorscheme hybrid
 "colorscheme desert256
 "colorscheme distinguished
-colorscheme obsidian
 "colorscheme dracula
+colorscheme obsidian
+"colorscheme desertink
 
 "some modifications to the colorscheme
 "to view current settings use for instance ':hi Folded'
@@ -112,9 +113,11 @@ hi Folded ctermfg=216
 hi Folded ctermbg=none
 hi FoldColumn ctermfg=216
 hi FoldColumn ctermbg=None
+hi Pmenu ctermbg=NONE ctermfg=blue
 "hi clear String
 "hi String ctermfg=200
 hi CursorLine cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
+hi NerdTreeDir ctermbg=NONE ctermfg=222
 
 
 """"""""""""""""""""""""
@@ -127,6 +130,8 @@ Plug 'scrooloose/nerdtree'
 
 "fuzzy finder and mru
 Plug 'ctrlpvim/ctrlp.vim'
+
+Plug 'pbogut/fzf-mru.vim'
 
 "visual addons tabline
 Plug 'bling/vim-airline'
@@ -311,17 +316,15 @@ inoremap <silent> <F9> <esc> :YRShow<CR>
 " NERDTREE
 nnoremap <Leader>t :Tree<Enter>
 " CTRLP
-map <Leader>s :CtrlP<Enter>
+map <Leader>s :FZF<Enter>
 "nmap <C-p> :CtrlP<Enter>
 " Ag
 map <C-a> :Ag<Enter>
 :command Ag "Ag!"
 "nnoremap <Leader>s :!grep -IirlZ "pattern" .|xargs -0 vim
 nnoremap <Leader>f :grep <C-r><C-w> **/*.php | cw
-"check errors
-"nmap <Leader>e :!php -l %<Enter>
-"let test#strategy = "neovim"
-let test#strategy = "basic"
+"let test#strategy = "basic"
+let test#strategy = "neovim"
 "change to camelCase
 nnoremap + /\w\+_<CR>
 nnoremap - f_x~
@@ -353,8 +356,14 @@ nnoremap <Leader>d <C-]>
 
 map <F1> <esc>
 
-"disable comments with new line
+" Output the current syntax group
+nnoremap <Leader>hi :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+            \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+            \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<cr>
+
+"disable comments with new line (uncomment if desired)
 "autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
 """"""""""""""""""""""""""""""""""""""
 " Plugins: specific plugin configuration and mappings
 """"""""""""""""""""""""""""""""""""""
@@ -402,7 +411,6 @@ let g:UltiSnipsEditSplit="vertical"
 " Custom snippets dir
 set runtimepath+=~/.vim/vimrc-php
 let g:UltiSnipsSnippetsDir="~/.vim/vimrc-php/UltiSnips"
-"let g:UltiSnipsSnippetDirectories=[$HOME."/.vim/vimrc-php/UltiSnips"]
 
 "for Laravel blade templates being recognized as html
 autocmd BufNewFile,BufRead *.blade.php setlocal ft=html
@@ -463,10 +471,11 @@ let g:yankring_max_element_length = 8388608 " 8M
 fun! Tree() "{{{
 	if g:is_nerd_tree_opened==1
 		let g:is_nerd_tree_opened=0
+        execute "NERDTreeToggle"
 	else
 		let g:is_nerd_tree_opened=1
+        execute "NERDTreeFind"
 	endif
-	execute "NERDTreeToggle"
 endfunction "}}}
 
 command! -nargs=* Tree call Tree()
@@ -488,12 +497,14 @@ let NERDTreeWinSize=55
 
 fun! MV() "{{{
 	vsp
-	execute "CtrlPMRUFiles"
+	"execute \"CtrlPMRUFiles\"
+    execute "FZFMru"
 endfunction "}}}
 
 fun! MH() "{{{
 	sp
-	execute "CtrlPMRUFiles"
+	"execute \"CtrlPMRUFiles\"
+    execute "FZFMru"
 endfunction "}}}
 
 fun! Mon() "{{{
@@ -501,14 +512,16 @@ fun! Mon() "{{{
 	if g:is_nerd_tree_opened == 1
 		execute "NERDTreeToggle"
 	endif
-	execute "CtrlPMRUFiles"
+    execute "FZFMru"
+	"execute \"CtrlPMRUFiles\"
 endfunction "}}}
 
 fun! M() "{{{
-	execute "CtrlPMRUFiles"
+    execute "FZFMru"
+    "execute \"CtrlPMRUFiles\"
 endfunction "}}}
 
-let ctrlp_mruf_max = 1500
+let ctrlp_mruf_max = 500
 let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:100'
 
 
@@ -518,6 +531,7 @@ command! -nargs=* Mon call Mon()
 command! -nargs=* M call M()
 
 "SUPERTAB from top to bottom
+"--------------------------------
 let g:SuperTabDefaultCompletionType = "<c-o>"
 
 inoremap <C-@> <C-x><C-o><C-p>
@@ -562,8 +576,6 @@ if !exists('g:airline_symbols')
 endif
 
 " unicode symbols for airline
-"let g:airline_theme = 'powerlineish'
-let g:airline_theme = 'cool'
 let g:airline_theme = 'bubblegum'
 let g:airline#extensions#syntastic#enabled = 1
 let g:airline#extensions#branch#enabled = 1
@@ -663,14 +675,12 @@ function! DiffToggle(mode) range
             "diffthis
         endif
     endif
-    :endfunction
+:endfunction
 
 
 "TAGBAR + TAG GENERATION
 "--------------
 nnoremap <leader>j :split<CR>:exec("tag ".expand("<cword>"))<CR>
-
-"map <A-i> :vsp <CR>:exec("tag ".expand("<cword>"))<CR>
 
 function! GenTags()
 	if isdirectory("./vendor")
@@ -702,7 +712,6 @@ function! GenTags()
 :endfunction
 
 command! -nargs=* GenTags call GenTags()
-"GenTags()
 
 
 "REMOVE TRAILING SPACES (and dos breaklines ^M)
@@ -733,7 +742,7 @@ endfunction "}}}
 command! -nargs=* TL call TestL()
 
 fun! TestS() "{{{
-    execute 'TestSuite'
+    execute '!vendor/bin/paratest -p8 tests/'
 endfunction "}}}
 
 command! -nargs=* TS call TestS()
@@ -757,7 +766,7 @@ fun! Night() "{{{
 	hi LineNr ctermbg=none
 
 	hi Folded ctermfg=216
-	hi Folded ctermbg=black
+	hi Folded ctermbg=none
 
 	hi FoldColumn ctermfg=216
 	hi FoldColumn ctermbg=None
@@ -769,9 +778,13 @@ fun! Night() "{{{
 
     set t_ZH=[3m
     set t_ZR=[23m
-    highlight Comment cterm=italic
+    highlight Comment ctermfg=grey cterm=italic
     hi Error ctermfg=17 ctermbg=166 cterm=none
     hi SpellBad ctermfg=17 ctermbg=166 cterm=undercurl
+
+    "popup
+    highlight Pmenu ctermbg=none ctermfg=blue
+    highlight PmenuSel ctermbg=none ctermfg=yellow
 
     " Braces coloring
     autocmd BufRead,BufNewFile * syn match parens /[(){}]/ | hi parens ctermfg=blue
@@ -844,8 +857,8 @@ command! -nargs=1 DiffRev call s:get_diff_files(<q-args>)
 if !exists('g:vdebug_options')
     let g:vdebug_options = {}
 endif
-"let g:vdebug_options['path_maps'] = {"/var/www/html/micobe/": "/var/www/current/test/"}
-let g:vdebug_options['path_maps'] = {"/var/www/current/test/": "/var/www/html/micobe/"}
+"let g:vdebug_options['path_maps'] = {"/var/www/current/test/": "/var/www/html/micobe/"}
+let g:vdebug_options['path_maps'] = {"/var/www/current/backend_test/": "/var/www/html/backend/"}
 
 let g:vdebug_options = {
             \'break_on_open': 0
@@ -862,5 +875,9 @@ let g:php_cs_fixer_enable_default_mapping = 1     " Enable the mapping by defaul
 let g:php_cs_fixer_dry_run = 0                    " Call command with dry-run option
 let g:php_cs_fixer_verbose = 0
 
-
 command! -nargs=* Fix :execute PhpCsFixerFixFile() | :undo | :w | :redo | :DiffLastSaved
+
+" ----------------------------------------------------------------------------
+" vim-sequence-diagram
+" ----------------------------------------------------------------------------
+nmap <unique> <leader>q <Plug>GenerateDiagram 

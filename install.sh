@@ -28,7 +28,9 @@ sudo apt-get install xclip
 cd ~/
 
 #install patched font for terminal (copying to ~/.local/share/fonts  closing all terminal windows and editing settings)
-mkdir ~/.local/share/fonts
+wget https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/SourceCodePro/Medium/complete/Sauce%20Code%20Pro%20Medium%20Nerd%20Font%20Complete%20Mono.ttf ~
+
+mkdir -p ~/.local/share/fonts
 
 mv ~/Sauce*ttf ~/.local/share/fonts/
 
@@ -37,6 +39,18 @@ mv ~/Sauce*ttf ~/.local/share/fonts/
 ln -s ~/.vim/plugged/vim-colorschemes/colors ~/.vim/colors
 
 #ending
+
+#Install NEOVIM
+
+printf "\nInstalling neovim, Ctrl-C if don't..."
+read -rsn1
+
+curl -LO https://github.com/neovim/neovim/releases/download/stable/nvim.appimage
+chmod u+x nvim.appimage
+./nvim.appimage
+mkdir -p ~/.config/nvim
+touch ~/.config/nvim/vimrc
+cat "source /home/vivo/.vim/vimrc-php/vimrc" >> ~/.config/nvim/vimrc
 
 printf "\nFinished :-) Now you need to open a new terminal.\n\nOh, and remember to set the Source Code Pro font from the terminal settings.\n\nPress any key..."
 
