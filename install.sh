@@ -45,12 +45,16 @@ ln -s ~/.vim/plugged/vim-colorschemes/colors ~/.vim/colors
 printf "\nInstalling neovim, Ctrl-C if don't..."
 read -rsn1
 
+printf "\nInstalling python3 (needed for neovim), Ctrl-C if don't..."
+read -rsn1
+sudo apt-get install python3
+
 curl -LO https://github.com/neovim/neovim/releases/download/stable/nvim.appimage
 chmod u+x nvim.appimage
 ./nvim.appimage
 mkdir -p ~/.config/nvim
 touch ~/.config/nvim/vimrc
-cat "source /home/vivo/.vim/vimrc-php/vimrc" >> ~/.config/nvim/vimrc
+cat "source ~/.vim/vimrc-php/vimrc" >> ~/.config/nvim/vimrc
 
 printf "\nFinished :-) Now you need to open a new terminal.\n\nOh, and remember to set the Source Code Pro font from the terminal settings.\n\nPress any key..."
 

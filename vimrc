@@ -125,6 +125,9 @@ hi NerdTreeDir ctermbg=NONE ctermfg=222
 """"""""""""""""""""""""
 call plug#begin()
 
+"diff dirs"
+Plug 'will133/vim-dirdiff'
+
 "nerdtree
 Plug 'scrooloose/nerdtree'
 
@@ -141,7 +144,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'scrooloose/nerdcommenter'
 
 "code completion with 'tab'
-Plug 'ervandew/supertab'
+"Plug 'ervandew/supertab'
 
 "one colorscheme to rule them all lol
 Plug 'flazz/vim-colorschemes'
@@ -197,6 +200,9 @@ Plug 'SirVer/ultisnips'
 " Snippets are separated from the engine. Add this if you want them:
 Plug 'honza/vim-snippets'
 
+"For PHP
+Plug 'sniphpets/sniphpets'
+
 "For Symfony
 Plug 'sniphpets/sniphpets-symfony'
 
@@ -245,6 +251,9 @@ Plug 'airblade/vim-rooter'
 "testing utility
 Plug 'janko-m/vim-test'
 
+"example specifying a branch:
+"Plug 'https://github.com/codeinabox/vim-test.git', { 'as': 'tester', 'branch': 'bugfix/paratest-nearest' }
+
 "interacting with tmux
 Plug 'benmills/vimux'
 
@@ -254,28 +263,49 @@ Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
 " (optional) colorizer
 Plug 'chrisbra/Colorizer'
 
-"xdebug debugger
+" xdebug debugger
 Plug 'joonty/vdebug'
 
-"fuzzy finder: PlugInstall and PlugUpdate will clone fzf in ~/.fzf and run install script
+" fuzzy finder: PlugInstall and PlugUpdate will clone fzf in ~/.fzf and run install script
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
-"Phpator refactoring and autocompletion
+" Phpator refactoring and autocompletion
 Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
 
-" Require ncm2 and this plugin
-Plug 'ncm2/ncm2'
-Plug 'roxma/nvim-yarp'
-Plug 'phpactor/ncm2-phpactor'
-Plug 'ncm2/ncm2-ultisnips'
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-tmux'
-Plug 'ncm2/ncm2-path'
+" Conquer Of Completion
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 "Automatically document function, var, class..
 Plug 'tobyS/vmustache'
 Plug 'tobyS/pdv'
+
+"Sequence diagram generator and browser viewer
+Plug 'xavierchow/vim-sequence-diagram'
+
+"Kotlin syntax hightlight
+Plug 'udalov/kotlin-vim'
+
+"Vue syntax hightlight
+Plug 'posva/vim-vue'
+
+" On-demand lazy load
+Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
+
+nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
+" By default timeoutlen is 1000 ms
+set timeoutlen=500
+
+" with codi you dont even need to run scripts to knoW the output
+Plug 'metakirby5/codi.vim'
+
+" Jump to any location specified by two characters.
+Plug 'justinmk/vim-sneak'
+let g:sneak#label = 1
+map f <Plug>Sneak_f
+map F <Plug>Sneak_F
+map t <Plug>Sneak_t
+map T <Plug>Sneak_T
 
 let g:pdv_template_dir = $HOME ."/.vim/plugged/pdv/templates_snip"
 
@@ -314,7 +344,7 @@ nnoremap <Leader>mn ['
 nnoremap <silent> <F9> :YRShow<CR>
 inoremap <silent> <F9> <esc> :YRShow<CR>
 " NERDTREE
-nnoremap <Leader>t :Tree<Enter>
+nnoremap <Leader>t :NERDTreeToggle
 " CTRLP
 map <Leader>s :FZF<Enter>
 "nmap <C-p> :CtrlP<Enter>
@@ -367,11 +397,6 @@ nnoremap <Leader>hi :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") 
 """"""""""""""""""""""""""""""""""""""
 " Plugins: specific plugin configuration and mappings
 """"""""""""""""""""""""""""""""""""""
-
-" NCM2
-"---------------------------------
-autocmd BufEnter * call ncm2#enable_for_buffer()
-set completeopt=noinsert,menuone,noselect
 
 " OPEN-BROWSER
 "---------------------------------
@@ -434,6 +459,8 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 1
 "no annoying code sniffer errors
 let g:syntastic_php_checkers = ['php', 'phpmd']
+let g:syntastic_vue_checkers = ['eslint']
+let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_error_symbol='✗'
 let g:syntastic_warning_symbol='⚠'
 let g:syntastic_style_error_symbol = '⚠'
@@ -442,7 +469,7 @@ let g:syntastic_enable_signs = 1
 let g:syntastic_enable_highlighting=0
 let g:syntastic_mode_map = {
             \ "mode": "passive",
-            \ "active_filetypes": ["ruby", "php"],
+            \ "active_filetypes": ["ruby", "php", "vue", "javascript"],
             \ "passive_filetypes": ["puppet"] }
 
 
@@ -467,18 +494,22 @@ let g:yankring_max_element_length = 8388608 " 8M
 
 "NERDTREE
 "---------------------------------
+" Check if NERDTree is open or active
+function! IsNERDTreeOpen()        
+    return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
+endfunction
 
-fun! Tree() "{{{
-	if g:is_nerd_tree_opened==1
-		let g:is_nerd_tree_opened=0
-        execute "NERDTreeToggle"
-	else
-		let g:is_nerd_tree_opened=1
-        execute "NERDTreeFind"
-	endif
-endfunction "}}}
+" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
+" file, and we're not in vimdiff
+function! SyncTree()
+    if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
+        NERDTreeFind
+        wincmd p
+    endif
+endfunction
 
-command! -nargs=* Tree call Tree()
+" Highlight currently open buffer in NERDTree
+autocmd BufEnter * call SyncTree()
 
 "Open NERDTree if no files specified
 autocmd StdinReadPre * let s:std_in=1
@@ -498,13 +529,13 @@ let NERDTreeWinSize=55
 fun! MV() "{{{
 	vsp
 	"execute \"CtrlPMRUFiles\"
-    execute "FZFMru"
+    execute "FZFFreshMru"
 endfunction "}}}
 
 fun! MH() "{{{
 	sp
 	"execute \"CtrlPMRUFiles\"
-    execute "FZFMru"
+    execute "FZFFreshMru"
 endfunction "}}}
 
 fun! Mon() "{{{
@@ -512,12 +543,12 @@ fun! Mon() "{{{
 	if g:is_nerd_tree_opened == 1
 		execute "NERDTreeToggle"
 	endif
-    execute "FZFMru"
+    execute "FZFFreshMru"
 	"execute \"CtrlPMRUFiles\"
 endfunction "}}}
 
 fun! M() "{{{
-    execute "FZFMru"
+    execute "FZFFreshMru"
     "execute \"CtrlPMRUFiles\"
 endfunction "}}}
 
@@ -532,10 +563,10 @@ command! -nargs=* M call M()
 
 "SUPERTAB from top to bottom
 "--------------------------------
-let g:SuperTabDefaultCompletionType = "<c-o>"
+"let g:SuperTabDefaultCompletionType = "<c-o>"
 
-inoremap <C-@> <C-x><C-o><C-p>
-inoremap <C-Space> <C-x><C-o><C-p>
+"noremap <C-@> <C-x><C-o><C-p>
+"noremap <C-Space> <C-x><C-o><C-p>
 
 
 "encode/decode HTML
@@ -582,7 +613,7 @@ let g:airline#extensions#branch#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#whitespace#mixed_indent_algo = 1
 let g:airline#extensions#tabline#buffer_idx_mode = 1
-let g:airline_section_b = '%{fnamemodify(getcwd(),":t")}'
+let g:airline_section_x = '%{fnamemodify(getcwd(),":t")}'
 let g:airline#extensions#tagbar#flags = 'f'  " show full tag hierarchy
 set ttimeoutlen=50
 set laststatus=2
@@ -622,6 +653,9 @@ nmap <S-i> :call phpactor#Hover()<CR>
 
 " Show brief information about the symbol under the cursor
 nmap <Leader>e :call phpactor#ClassExpand()<CR>
+
+" Imports all missing classes on save
+autocmd BufWritePost *.php PhpactorImportMissingClasses
 
  """"""""""""""""""""""
  " HELPER FUNCTIONS
@@ -742,7 +776,7 @@ endfunction "}}}
 command! -nargs=* TL call TestL()
 
 fun! TestS() "{{{
-    execute '!vendor/bin/paratest -p8 tests/'
+    execute 'TestSuite'
 endfunction "}}}
 
 command! -nargs=* TS call TestS()
@@ -858,7 +892,7 @@ if !exists('g:vdebug_options')
     let g:vdebug_options = {}
 endif
 "let g:vdebug_options['path_maps'] = {"/var/www/current/test/": "/var/www/html/micobe/"}
-let g:vdebug_options['path_maps'] = {"/var/www/current/backend_test/": "/var/www/html/backend/"}
+"let g:vdebug_options['path_maps'] = {"/var/www/current/backend_test/": "/var/www/html/backend/"}
 
 let g:vdebug_options = {
             \'break_on_open': 0
@@ -881,3 +915,188 @@ command! -nargs=* Fix :execute PhpCsFixerFixFile() | :undo | :w | :redo | :DiffL
 " vim-sequence-diagram
 " ----------------------------------------------------------------------------
 nmap <unique> <leader>q <Plug>GenerateDiagram 
+
+" ----------------
+" unmimify
+" ----------------
+" Simple re-format for minified Javascript
+command! UnMinify call UnMinify()
+function! UnMinify()
+    %s/{\ze[^\r\n]/{\r/g
+    %s/){/) {/g
+    %s/};\?\ze[^\r\n]/\0\r/g
+    %s/;\ze[^\r\n]/;\r/g
+    %s/[^\s]\zs[=&|]\+\ze[^\s]/ \0 /g
+    normal ggVG=
+endfunction
+
+"-----------------
+" mardown live preview
+"-----------------
+noremap <silent> <leader>om :call OpenMarkdownPreview()<cr>
+
+function! OpenMarkdownPreview() abort
+    if exists('s:markdown_job_id') && s:markdown_job_id > 0
+        call jobstop(s:markdown_job_id)
+        unlet s:markdown_job_id
+    endif
+    let s:markdown_job_id = jobstart('grip ' . shellescape(expand('%:p')))
+    if s:markdown_job_id <= 0 | return | endif
+    call system('open http://localhost:6419')
+endfunction
+
+"-----------------
+" HTML5 indenting also on vue files
+"-----------------
+autocmd BufNewFile,BufRead *.vue set filetype=vue.html
+
+"-----------------
+" RIPGREP
+"-----------------
+" Ripgrep advanced
+function! RipgrepFzf(query, fullscreen)
+    let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
+    let initial_command = printf(command_fmt, shellescape(a:query))
+    let reload_command = printf(command_fmt, '{q}')
+    let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+    call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+
+
+"-----------------
+" COC
+"-----------------
+" TextEdit might fail if hidden is not set.
+set hidden
+
+" Some servers have issues with backup files, see #649.
+set nobackup
+set nowritebackup
+
+" Give more space for displaying messages.
+"set cmdheight=2
+set cmdheight=1
+
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
+
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has("patch-8.1.1564")
+    " Recently vim can merge signcolumn and number column into one
+    set signcolumn=number
+else
+    set signcolumn=yes
+endif
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+            \ pumvisible() ? "\<C-n>" :
+            \ <SID>check_back_space() ? "\<TAB>" :
+            \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
+if exists('*complete_info')
+    inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+    inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
+
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+    if (index(['vim','help'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+    else
+        call CocAction('doHover')
+    endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+    autocmd!
+    " Setup formatexpr specified filetype(s).
+    autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+    " Update signature help on jump placeholder.
+    autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Applying codeAction to the selected region.
+" Example: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap keys for applying codeAction to the current buffer.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Map function and class text objects
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xmap if <Plug>(coc-funcobj-i)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap af <Plug>(coc-funcobj-a)
+xmap ic <Plug>(coc-classobj-i)
+omap ic <Plug>(coc-classobj-i)
+xmap ac <Plug>(coc-classobj-a)
+omap ac <Plug>(coc-classobj-a)
+
+" Use CTRL-S for selections ranges.
+" Requires 'textDocument/selectionRange' support of LS, ex: coc-tsserver
+nmap <silent> <C-s> <Plug>(coc-range-select)
+xmap <silent> <C-s> <Plug>(coc-range-select)
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocAction('format')
+
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" Add (Neo)Vim's native statusline support.
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline.
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
