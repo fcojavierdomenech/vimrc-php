@@ -52,9 +52,6 @@ set number
 set relativenumber
 "set nowrap
 
-"ctags
-set tags=tags;/
-
 "some extra settings
 set title "title of the window
 set history=1000 "number of recorded changes in history
@@ -114,8 +111,6 @@ hi Folded ctermbg=none
 hi FoldColumn ctermfg=216
 hi FoldColumn ctermbg=None
 hi Pmenu ctermbg=NONE ctermfg=blue
-"hi clear String
-"hi String ctermfg=200
 hi CursorLine cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 hi NerdTreeDir ctermbg=NONE ctermfg=222
 
@@ -124,6 +119,11 @@ hi NerdTreeDir ctermbg=NONE ctermfg=222
 "DOWNLOADING PLUGINS: using vim-plug https://github.com/junegunn/vim-plug
 """"""""""""""""""""""""
 call plug#begin()
+
+" On-demand lazy load
+" i.e: WhichKey '<leader>'
+Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
+source $HOME/.vim/vimrc-php/plug-config/whichkey.vim
 
 "diff dirs"
 Plug 'will133/vim-dirdiff'
@@ -142,9 +142,6 @@ Plug 'vim-airline/vim-airline-themes'
 
 "plugin for comments
 Plug 'scrooloose/nerdcommenter'
-
-"code completion with 'tab'
-"Plug 'ervandew/supertab'
 
 "one colorscheme to rule them all lol
 Plug 'flazz/vim-colorschemes'
@@ -173,6 +170,12 @@ Plug 'evidens/vim-twig'
 "psr-2 syntax checker
 Plug 'stephpy/vim-php-cs-fixer'
 
+" Kotlin syntax hightlight
+Plug 'udalov/kotlin-vim'
+
+" Vue indent
+Plug 'leafOfTree/vim-vue-plugin'
+
 "syntastic
 Plug 'scrooloose/syntastic'
 
@@ -190,9 +193,6 @@ Plug 'vim-scripts/marvim'
 
 "a plugin for automatically restoring file's cursor position and folding
 Plug 'vim-scripts/restore_view.vim'
-
-"tagbar
-Plug 'majutsushi/tagbar'
 
 "Ultisnips
 Plug 'SirVer/ultisnips'
@@ -227,7 +227,7 @@ Plug 'rking/ag.vim'
 "Project replace plugin
 Plug 'skwp/greplace.vim'
 
-"abolish heps handling words with substitutions abreviations and so
+"abolish heps handling words with substitutions abreviations and so (:%S)
 Plug 'tpope/vim-abolish'
 
 "Calendar
@@ -251,12 +251,6 @@ Plug 'airblade/vim-rooter'
 "testing utility
 Plug 'janko-m/vim-test'
 
-"example specifying a branch:
-"Plug 'https://github.com/codeinabox/vim-test.git', { 'as': 'tester', 'branch': 'bugfix/paratest-nearest' }
-
-"interacting with tmux
-Plug 'benmills/vimux'
-
 " (optional) javascript completion
 Plug 'roxma/nvim-cm-tern',  {'do': 'npm install'}
 
@@ -272,32 +266,24 @@ Plug 'junegunn/fzf.vim'
 
 " Phpator refactoring and autocompletion
 Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
+source $HOME/.vim/vimrc-php/plug-config/phpactor.vim
 
 " Conquer Of Completion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
-"Automatically document function, var, class..
-Plug 'tobyS/vmustache'
-Plug 'tobyS/pdv'
+source $HOME/.vim/vimrc-php/plug-config/coc.vim
 
 "Sequence diagram generator and browser viewer
 Plug 'xavierchow/vim-sequence-diagram'
 
-"Kotlin syntax hightlight
-Plug 'udalov/kotlin-vim'
+" Floaterm
+Plug 'voldikss/vim-floaterm'
+source $HOME/.vim/vimrc-php/plug-config/floaterm.vim
 
-"Vue syntax hightlight
-Plug 'posva/vim-vue'
+"example specifying a branch:
+"Plug 'https://github.com/codeinabox/vim-test.git', { 'as': 'tester', 'branch': 'bugfix/paratest-nearest' }
 
-" On-demand lazy load
-Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
-
-nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
 " By default timeoutlen is 1000 ms
 set timeoutlen=500
-
-" with codi you dont even need to run scripts to knoW the output
-Plug 'metakirby5/codi.vim'
 
 " Jump to any location specified by two characters.
 Plug 'justinmk/vim-sneak'
@@ -344,7 +330,7 @@ nnoremap <Leader>mn ['
 nnoremap <silent> <F9> :YRShow<CR>
 inoremap <silent> <F9> <esc> :YRShow<CR>
 " NERDTREE
-nnoremap <Leader>t :NERDTreeToggle
+nnoremap <Leader>n :NERDTreeToggle<CR>
 " CTRLP
 map <Leader>s :FZF<Enter>
 "nmap <C-p> :CtrlP<Enter>
@@ -358,9 +344,6 @@ let test#strategy = "neovim"
 "change to camelCase
 nnoremap + /\w\+_<CR>
 nnoremap - f_x~
-
-" UNDOTREE
-nnoremap <Leader>u :call UndotreeToggle()<CR>:call UndotreeFocus()<CR>
 
 " xclip is required for the following two commands
 " these allow to copy and paste from/to clipboard
@@ -407,10 +390,6 @@ function CallGoogle()
 :endfunction
 
 command! -nargs=* CallGoogle call CallGoogle()
-
-"AUTOCOMPLETE: NVM2
-"---------------------------------
-inoremap <expr> <CR> (pumvisible() ? "\<c-y>" : "\<CR>")
 
 "VIM-ROOTER
 "---------------------------------
@@ -538,15 +517,6 @@ fun! MH() "{{{
     execute "FZFFreshMru"
 endfunction "}}}
 
-fun! Mon() "{{{
-	execute "on"
-	if g:is_nerd_tree_opened == 1
-		execute "NERDTreeToggle"
-	endif
-    execute "FZFFreshMru"
-	"execute \"CtrlPMRUFiles\"
-endfunction "}}}
-
 fun! M() "{{{
     execute "FZFFreshMru"
     "execute \"CtrlPMRUFiles\"
@@ -558,16 +528,7 @@ let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:10,results:100'
 
 command! -nargs=* MV call MV()
 command! -nargs=* MH call MH()
-command! -nargs=* Mon call Mon()
 command! -nargs=* M call M()
-
-"SUPERTAB from top to bottom
-"--------------------------------
-"let g:SuperTabDefaultCompletionType = "<c-o>"
-
-"noremap <C-@> <C-x><C-o><C-p>
-"noremap <C-Space> <C-x><C-o><C-p>
-
 
 "encode/decode HTML
 "--------------------------------
@@ -588,7 +549,7 @@ let g:skipview_files = ['*\.vim']
 "GREPLACE
 "--------------------------------
 
-set grepprg=ag    "we ant to use ag for the search
+set grepprg=ag    "we want to use ag for the search
 let g:grep_cmd_opts = '--line-numbers --noheading'
 
 
@@ -617,45 +578,6 @@ let g:airline_section_x = '%{fnamemodify(getcwd(),":t")}'
 let g:airline#extensions#tagbar#flags = 'f'  " show full tag hierarchy
 set ttimeoutlen=50
 set laststatus=2
-
-"PHPACTOR
-"--------------------------------
-" Include use statement
-nmap <Leader>u :call phpactor#UseAdd()<CR>
-
-" Invoke the context menu
-nmap <Leader>mm :call phpactor#ContextMenu()<CR>
-
-" Invoke the navigation menu
-nmap <Leader>nn :call phpactor#Navigate()<CR>
-
-" Goto definition of class or class member under the cursor
-nmap gd :call phpactor#GotoDefinition()<CR>
-" Goto references of class or class member under the cursor
-nmap gr :call phpactor#ClassReferences()<CR>
-" Transform the classes in the current file
-nmap <Leader>tt :call phpactor#Transform()<CR>
-
-" Generate a new class (replacing the current file)
-nmap <Leader>cn :call phpactor#ClassNew()<CR>
-
-" Extract expression (normal mode)
-nmap <silent><Leader>ee :call phpactor#ExtractExpression(v:false)<CR>
-
-" Extract expression from selection
-vmap <silent><Leader>ee :<C-U>call phpactor#ExtractExpression(v:true)<CR>
-
-" Extract method from selection
-vmap <silent><Leader>em :<C-U>call phpactor#ExtractMethod()<CR>
-
-" Show brief information about the symbol under the cursor
-nmap <S-i> :call phpactor#Hover()<CR>
-
-" Show brief information about the symbol under the cursor
-nmap <Leader>e :call phpactor#ClassExpand()<CR>
-
-" Imports all missing classes on save
-autocmd BufWritePost *.php PhpactorImportMissingClasses
 
  """"""""""""""""""""""
  " HELPER FUNCTIONS
@@ -711,44 +633,7 @@ function! DiffToggle(mode) range
     endif
 :endfunction
 
-
-"TAGBAR + TAG GENERATION
-"--------------
-nnoremap <leader>j :split<CR>:exec("tag ".expand("<cword>"))<CR>
-
-function! GenTags()
-	if isdirectory("./vendor")
-		echo '(re)Generating framework tags'
-		execute "!php artisan ide-helper:generate"
-		execute "!phpctags -R *"
-		if !filereadable(".git")
-			execute "!touch .git"
-		endif
-	else
-		echo 'Not in a framework project'
-		if filereadable("tags")
-			echo "Regenerating tags..."
-            execute "!phpctags -R *"
-			if !filereadable(".git")
-				execute "!touch .git"
-			endif
-		else
-			let choice = confirm("Create tags?", "&Yes\n&No", 2)
-			if choice == 1
-				echo "Generating tags..."
-                execute "!phpctags -R *"
-				if !filereadable(".git")
-					execute "!touch .git"
-				endif
-			endif
-		endif
-	endif
-:endfunction
-
-command! -nargs=* GenTags call GenTags()
-
-
-"REMOVE TRAILING SPACES (and dos breaklines ^M)
+" REMOVE TRAILING SPACES (and dos breaklines ^M)
 "--------------
 fun! RemoveTrailingSpaces() "{{{
     execute '%s/\s\+$//e'
@@ -756,7 +641,8 @@ fun! RemoveTrailingSpaces() "{{{
 endfunction "}}}
 command! -nargs=* RemoveTrailingSpaces call RemoveTrailingSpaces()
 
-"TESTING
+" TESTING
+"--------------
 fun! TestN() "{{{
     execute 'TestNearest'
 endfunction "}}}
@@ -828,19 +714,6 @@ command! -nargs=* Day call Day()
 command! -nargs=* Night call Night()
 
 Night()
-
-"Phpactor
-"--------------
-function! IsComposerProject()
-    if filereadable("composer.json")
-        echo "Found Composer.json: autocompletion will use Phpactor :-)"
-        autocmd FileType php setlocal omnifunc=phpactor#Complete
-    endif
-endfunction
-
-command! -nargs=* IsComposerProject call IsComposerProject()
-IsComposerProject()
-
 
 " Put at the very end of your .vimrc file.
 "-----------------------------------------
@@ -946,11 +819,6 @@ function! OpenMarkdownPreview() abort
 endfunction
 
 "-----------------
-" HTML5 indenting also on vue files
-"-----------------
-autocmd BufNewFile,BufRead *.vue set filetype=vue.html
-
-"-----------------
 " RIPGREP
 "-----------------
 " Ripgrep advanced
@@ -964,139 +832,3 @@ endfunction
 
 command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 
-
-"-----------------
-" COC
-"-----------------
-" TextEdit might fail if hidden is not set.
-set hidden
-
-" Some servers have issues with backup files, see #649.
-set nobackup
-set nowritebackup
-
-" Give more space for displaying messages.
-"set cmdheight=2
-set cmdheight=1
-
-" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-" delays and poor user experience.
-set updatetime=300
-
-" Don't pass messages to |ins-completion-menu|.
-set shortmess+=c
-
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved.
-if has("patch-8.1.1564")
-    " Recently vim can merge signcolumn and number column into one
-    set signcolumn=number
-else
-    set signcolumn=yes
-endif
-
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-            \ pumvisible() ? "\<C-n>" :
-            \ <SID>check_back_space() ? "\<TAB>" :
-            \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
-
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
-" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
-if exists('*complete_info')
-    inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-    inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
-
-" Use `[g` and `]g` to navigate diagnostics
-" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-    if (index(['vim','help'], &filetype) >= 0)
-        execute 'h '.expand('<cword>')
-    else
-        call CocAction('doHover')
-    endif
-endfunction
-
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" Symbol renaming.
-nmap <leader>rn <Plug>(coc-rename)
-
-" Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-
-augroup mygroup
-    autocmd!
-    " Setup formatexpr specified filetype(s).
-    autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-    " Update signature help on jump placeholder.
-    autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
-
-" Applying codeAction to the selected region.
-" Example: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Remap keys for applying codeAction to the current buffer.
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Apply AutoFix to problem on the current line.
-nmap <leader>qf  <Plug>(coc-fix-current)
-
-" Map function and class text objects
-" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-xmap if <Plug>(coc-funcobj-i)
-omap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap af <Plug>(coc-funcobj-a)
-xmap ic <Plug>(coc-classobj-i)
-omap ic <Plug>(coc-classobj-i)
-xmap ac <Plug>(coc-classobj-a)
-omap ac <Plug>(coc-classobj-a)
-
-" Use CTRL-S for selections ranges.
-" Requires 'textDocument/selectionRange' support of LS, ex: coc-tsserver
-nmap <silent> <C-s> <Plug>(coc-range-select)
-xmap <silent> <C-s> <Plug>(coc-range-select)
-
-" Add `:Format` command to format current buffer.
-command! -nargs=0 Format :call CocAction('format')
-
-" Add `:Fold` command to fold current buffer.
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
-" Add `:OR` command for organize imports of the current buffer.
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-
-" Add (Neo)Vim's native statusline support.
-" NOTE: Please see `:h coc-status` for integrations with external plugins that
-" provide custom statusline: lightline.vim, vim-airline.
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}

@@ -58,4 +58,7 @@ cat "source ~/.vim/vimrc-php/vimrc" >> ~/.config/nvim/vimrc
 
 printf "\nFinished :-) Now you need to open a new terminal.\n\nOh, and remember to set the Source Code Pro font from the terminal settings.\n\nPress any key..."
 
+# install code intellisense for php globally
+npm i intelephense -g
+
 read -rsn1

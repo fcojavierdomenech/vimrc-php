@@ -22,13 +22,7 @@ On your Konsole go to
     settings-> Edit current profile -> Appearance-> Select Font
 and select your new font
 
-For laravel projects code-intellisense:
-
-ide-helper for composer projects (vendor libs autocomplete) `composer require barryvdh/laravel-ide-helper`
-
-Now from the framework-project root run: `php artisan ide-helper:generate`. Also, it'll help if you extend your models to \Eloquent instead of \Model
-
-For debugging capabilities, Vdebug it's used, see github for installation/usage instructions: https://github.com/joonty/vdebug
+For debugging capabilities, [Vdebug](https://github.com/neoclide/coc.nvim) it's used, see github for installation/usage instructions. 
 Xdebug installation: https://xdebug.org/wizard.php
 
 Optionally install these syntax checkers:
@@ -38,3 +32,14 @@ Optionally install these syntax checkers:
 `composer global require "phpmd/phpmd=*"`
 
 `composer global require "squizlabs/php_codesniffer=*"`
+
+For code intellisense, [coc](https://github.com/neoclide/coc.nvim) it's used, and some extensions:
+* Marketplace, browse all the available coc extensions, in nvim run `:CocInstall coc-marketplace`
+* Intelephense, install the [coc-extension](https://github.com/marlonfan/coc-phpls), in your nvim run `:CocInstall coc-phpls`
+* These others might be interesting to install:
+- coc-sql
+- coc-snippets
+- coc-yaml
+- coc-vetur
+- coc-json
+- coc-phpactor
