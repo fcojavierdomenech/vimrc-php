@@ -16,7 +16,7 @@ I'm used to start vim from the project root directory.
 
 ### BEFORE GOING ON WITH THE install.sh:
 
-Donwload a patched font of your like for coding, this is mine: https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/SourceCodePro/Medium/complete/Sauce%20Code%20Pro%20Medium%20Nerd%20Font%20Complete%20Mono.ttf and place it at the $HOME dir
+Donwload a patched font of your like for coding, this is [mine](https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/SourceCodePro/Medium/complete/Sauce%20Code%20Pro%20Medium%20Nerd%20Font%20Complete%20Mono.ttf) and place it at the $HOME dir
 
 On your Konsole go to
     settings-> Edit current profile -> Appearance-> Select Font
