@@ -324,8 +324,6 @@ nnoremap <S-j> <C-w>j
 nnoremap <S-k> <C-w>k
 " MARKS
 nnoremap <Leader>m :marks<Enter>
-nnoremap <Leader>mm ]'
-nnoremap <Leader>mn ['
 " YANKRING
 nnoremap <silent> <F9> :YRShow<CR>
 inoremap <silent> <F9> <esc> :YRShow<CR>
@@ -713,7 +711,7 @@ endfunction "}}}
 command! -nargs=* Day call Day()
 command! -nargs=* Night call Night()
 
-Night()
+"Night()
 
 " Put at the very end of your .vimrc file.
 "-----------------------------------------
