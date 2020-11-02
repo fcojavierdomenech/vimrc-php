@@ -16,12 +16,10 @@ if has("autocmd")
   filetype plugin indent on
 endif
 
-source ./config/settings.vimrc
+let path = expand('%:p:h')
 
-source ./config/colorscheme.vimrc
-
-source ./config/plugs.vimrc
-
-source ./config/mappings.vimrc
-
-source ./config/helpers.vimrc
+source ~/.vim/vimrc-php/config/settings.vimrc
+source ~/.vim/vimrc-php/config/colorscheme.vimrc
+source ~/.vim/vimrc-php/config/plugs.vimrc
+source ~/.vim/vimrc-php/config/mappings.vimrc
+source ~/.vim/vimrc-php/config/helpers.vimrc
