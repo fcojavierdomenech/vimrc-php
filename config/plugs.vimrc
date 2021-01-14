@@ -101,6 +101,13 @@ Plug 'janko-m/vim-test'
 " xdebug debugger
 Plug 'joonty/vdebug'
 
+Plug 'tpope/vim-dadbod'
+Plug 'kristijanhusak/vim-dadbod-ui'
+
+Plug 'lambdalisue/nerdfont.vim'
+
+Plug 'n0v1c3/vira'
+
 " fuzzy finder: PlugInstall and PlugUpdate will clone fzf in ~/.fzf and run install script
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -317,9 +324,10 @@ if !exists('g:vdebug_options')
 endif
 "let g:vdebug_options['path_maps'] = {"remote path": "local path"}
 
-let g:vdebug_options = {
-            \'break_on_open': 0
-            \}
+let g:vdebug_options = {'ide_key': 'xdebug'}
+let g:vdebug_options = {'break_on_open': 0}
+let g:vdebug_options = {'server': 'localhost'}
+let g:vdebug_options = {'port': '9001'}
 
 " ----------------------------------------------------------------------------
 " Php-cs-fixer

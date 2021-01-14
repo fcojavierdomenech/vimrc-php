@@ -22,8 +22,22 @@ On your Konsole go to
     settings-> Edit current profile -> Appearance-> Select Font
 and select your new font
 
-For debugging capabilities, [Vdebug](https://github.com/neoclide/coc.nvim) it's used, see github for installation/usage instructions. 
+For debugging capabilities, [Vdebug](https://github.com/vim-vdebug/vdebug) it's used, see github for installation/usage instructions. 
 Xdebug installation: https://xdebug.org/wizard.php
+
+Add this to bashrc: 
+export XDEBUG_CONFIG="idekey=xdebug"
+
+And this to php.ini:
+
+[xdebug]
+zend_extension=xdebug.so
+xdebug.default_enable=1
+xdebug.remote_enable=1
+xdebug.remote_autostart=0
+xdebug.remote_port=9001
+xdebug.remote_handler=dbgp
+xdebug.remote_host=localhost
 
 Optionally install these syntax checkers:
 

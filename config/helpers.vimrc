@@ -35,3 +35,13 @@ function! UnMinify()
     normal ggVG=
 endfunction
 
+" ----------------
+" tab 2 spaces
+" ----------------
+command! Tab2Spaces call Tab2Spaces()
+function! Tab2Spaces()
+    set expandtab
+    set shiftwidth=2
+    set softtabstop=2
+endfunction
+
