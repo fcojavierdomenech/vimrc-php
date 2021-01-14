@@ -29,7 +29,7 @@ nnoremap dN [c
 nnoremap <silent> <F9> :YRShow<CR>
 inoremap <silent> <F9> <esc> :YRShow<CR>
 " FZF
-map <Leader>s :FZF<Enter>
+map <Leader>s :GFiles<Enter>
 :command Ag "Ag!"
 let test#strategy = "neovim"
 "change to camelCase
