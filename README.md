@@ -43,3 +43,5 @@ For code intellisense, [coc](https://github.com/neoclide/coc.nvim) it's used, an
 - coc-vetur
 - coc-json
 - coc-phpactor
+- coc-phpactor
+- coc-tabnine
