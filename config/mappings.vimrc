@@ -39,12 +39,6 @@ nnoremap - f_x~
 inoremap jk <esc>
 inoremap kj <esc>
 
-" xclip is required for the following two commands
-" these allow to copy and paste from/to clipboard
-vmap <C-c> y:call system("pbcopy", getreg("\""))<CR>:call system("pbcopy ", getreg("\""))<CR>
-nmap <C-v> :call setreg("\"",system("pbpaste"))<CR>p
-inoremap <C-v> <esc> :call setreg("\"",system("pbpaste"))<CR>p
-"in order to ident the pasted content
 autocmd VimEnter * nnoremap p p=`]`]l
 
 "mapping for surround plugin in visual mode

@@ -115,6 +115,12 @@ Plug 'pbogut/fzf-mru.vim'
 
 " Phpator refactoring and autocompletion
 Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
+
+" Vue
+Plug 'leafOfTree/vim-vue-plugin'
+
+Plug 'wellle/context.vim'
+
 source $HOME/.vim/vimrc-php/plug-config/phpactor.vim
 
 " Conquer Of Completion
@@ -373,3 +379,8 @@ noremap <silent> <leader>n :CocCommand explorer<cr>
 let g:doge_php_settings = {
             \  'resolve_fqn': 1
             \}
+
+"-----------------
+" CONTEXT
+"-----------------
+let g:contex_enabled=0
