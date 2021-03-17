@@ -106,7 +106,7 @@ Plug 'kristijanhusak/vim-dadbod-ui'
 
 Plug 'lambdalisue/nerdfont.vim'
 
-Plug 'n0v1c3/vira'
+Plug 'n0v1c3/vira', { 'do': './install.sh' }
 
 " fuzzy finder: PlugInstall and PlugUpdate will clone fzf in ~/.fzf and run install script
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }

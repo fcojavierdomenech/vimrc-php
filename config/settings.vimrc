@@ -54,6 +54,9 @@ set undofile
 "to remove the comment after new line
 au FileType c,cpp,php,java,js,bash setlocal comments-=:// comments+=f://
 
+"DBUI avoid folding
+au FileType dbout set nofoldenable
+
 " Time in milliseconds to wait for a mapped sequence to complete. Default 1000 ms
 set timeoutlen=500
 
