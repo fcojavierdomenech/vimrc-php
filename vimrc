@@ -22,6 +22,10 @@ source ~/.vim/vimrc-php/config/settings.vimrc
 source ~/.vim/vimrc-php/config/colorscheme.vimrc
 source ~/.vim/vimrc-php/config/plugs.vimrc
 source ~/.vim/vimrc-php/config/mappings.vimrc
-source ~/.vim/vimrc-php/config/linux-mappings.vimrc
 source ~/.vim/vimrc-php/config/english-keyboard-mappings.vimrc
 source ~/.vim/vimrc-php/config/helpers.vimrc
+if has('macunix')
+    source ~/.vim/vimrc-php/config/macos-mappings.vimrc
+else
+    source ~/.vim/vimrc-php/config/linux-mappings.vimrc
+endif

@@ -383,4 +383,5 @@ let g:doge_php_settings = {
 "-----------------
 " CONTEXT
 "-----------------
-let g:contex_enabled=0
+let g:contex_enabled = 0
+let g:context_filetype_blacklist = ['php']
