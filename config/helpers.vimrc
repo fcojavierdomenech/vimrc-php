@@ -45,3 +45,13 @@ function! Tab2Spaces()
     set softtabstop=2
 endfunction
 
+" ----------------
+" tab 4 spaces
+" ----------------
+command! Tab4Spaces call Tab4Spaces()
+function! Tab4Spaces()
+    set expandtab
+    set shiftwidth=4
+    set softtabstop=4
+endfunction
+

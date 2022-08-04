@@ -60,7 +60,6 @@ highlight PmenuSel ctermbg=none ctermfg=yellow
 " Braces coloring
 autocmd BufRead,BufNewFile * syn match parens /[(){}]/ | hi parens ctermfg=blue
 
-
 function! PhpSyntaxOverride()
     "hi! def link phpDocTags  phpDefine
     "hi! def link phpDocParam phpType

@@ -11,8 +11,10 @@ nmap <Leader>nn :call phpactor#Navigate()<CR>
 
 " Goto definition of class or class member under the cursor
 nmap gd :call phpactor#GotoDefinition()<CR>
+
 " Goto references of class or class member under the cursor
 nmap gr :call phpactor#ClassReferences()<CR>
+
 " Transform the classes in the current file
 nmap <Leader>tt :call phpactor#Transform()<CR>
 
@@ -36,7 +38,6 @@ nmap <Leader>e :call phpactor#ClassExpand()<CR>
 
 " Imports all missing classes on save
 autocmd BufWritePost *.php PhpactorImportMissingClasses
-
 
 function! IsComposerProject()
     if filereadable("composer.json")

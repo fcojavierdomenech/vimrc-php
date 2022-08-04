@@ -57,6 +57,12 @@ au FileType c,cpp,php,java,js,bash setlocal comments-=:// comments+=f://
 "DBUI avoid folding
 au FileType dbout set nofoldenable
 
+au FileType js,typescript,twig,yaml,html call Tab2Spaces()
+au FileType c,cpp,php,java,js,bash call Tab4Spaces()
+
 " Time in milliseconds to wait for a mapped sequence to complete. Default 1000 ms
 set timeoutlen=500
 
+" Coc completion
+" Use 'pumwidth' for configure minimal width of popupmenu and 'pumheight'
+set pumwidth=40

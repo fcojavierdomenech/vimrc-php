@@ -3,9 +3,6 @@
 """"""""""""""""""""""""
 call plug#begin()
 
-" PHP documentor
-Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } }
-
 " On-demand lazy load
 Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 source $HOME/.vim/vimrc-php/plug-config/whichkey.vim
@@ -28,9 +25,6 @@ Plug 'StanAngeloff/php.vim'
 
 "Twig syntax highlighting
 Plug 'evidens/vim-twig'
-
-"psr-2 syntax checker
-Plug 'stephpy/vim-php-cs-fixer'
 
 "syntastic
 Plug 'scrooloose/syntastic'
@@ -99,7 +93,8 @@ Plug 'airblade/vim-rooter'
 Plug 'janko-m/vim-test'
 
 " xdebug debugger
-Plug 'joonty/vdebug'
+"Plug 'joonty/vdebug'
+Plug 'puremourning/vimspector'
 
 Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-ui'
@@ -119,8 +114,13 @@ Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
 " Vue
 Plug 'leafOfTree/vim-vue-plugin'
 
-Plug 'wellle/context.vim'
+Plug 'chrisbra/Colorizer'
 
+Plug 'peitalin/vim-jsx-typescript'
+
+Plug 'PeterRincker/vim-searchlight'
+
+" Phpactor
 source $HOME/.vim/vimrc-php/plug-config/phpactor.vim
 
 " Conquer Of Completion
@@ -131,8 +131,9 @@ source $HOME/.vim/vimrc-php/plug-config/coc.vim
 Plug 'voldikss/vim-floaterm'
 source $HOME/.vim/vimrc-php/plug-config/floaterm.vim
 
-"example specifying a branch:
-"Plug 'https://github.com/codeinabox/vim-test.git', { 'as': 'tester', 'branch': 'bugfix/paratest-nearest' }
+"vim-jsx-typescript
+Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript'
 
 " Jump to any location specified by two characters.
 Plug 'justinmk/vim-sneak'
@@ -162,7 +163,6 @@ let g:undotree_WindowLayout=2
 
 "UTILSNIPS
 "---------------------------------
-
 " Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
 let g:UltiSnipsExpandTrigger="<C-l>"
 let g:UltiSnipsJumpForwardTrigger="<C-j>"
@@ -184,7 +184,6 @@ set diffopt+=vertical
 
 "SYNTASTIC
 "---------------------------------
-
 "set statusline+=%{fugitive#statusline()}
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -202,10 +201,11 @@ let g:syntastic_style_error_symbol = '⚠'
 let g:syntastic_style_warning_symbol = '⚠'
 let g:syntastic_enable_signs = 1
 let g:syntastic_enable_highlighting=0
+"avoid ionic errors
+let g:syntastic_html_tidy_ignore_errors=["<ion-", "discarding unexpected </ion-", " proprietary attribute \"ng-"]
 
 "PHP
 "---------------------------------
-
 "special features for php
 "let php_folding = 1        "Set PHP folding of classes and functions.
 let php_htmlInStrings = 1  "Syntax highlight HTML code inside PHP strings.
@@ -214,7 +214,6 @@ let php_sql_query = 1      "Syntax highlight SQL code inside PHP strings.
 
 "YANKRING
 "---------------------------------
-
 if $USER == 'root'
     let loaded_yankring = 120
 endif
@@ -244,7 +243,6 @@ command! -nargs=* M call M()
 
 "encode/decode HTML
 "--------------------------------
-
 nnoremap <silent> <Leader>h :silent %!perl -CIO -MHTML::Entities -pe '$_=encode_entities $_'<CR>
 vnoremap <silent> <Leader>h :<C-u>silent '<,'>!perl -CIO -MHTML::Entities -pe '$_=encode_entities $_'<CR>
 nnoremap <silent> <Leader>H :silent %!perl -CI  -MHTML::Entities -pe '$_=decode_entities $_'<CR>
@@ -253,21 +251,18 @@ vnoremap <silent> <Leader>H :<C-u>silent '<,'>!perl -CI  -MHTML::Entities -pe '$
 
 "REMEMBER
 "--------------------------------
-
 set viewoptions=cursor,folds,slash,unix
 let g:skipview_files = ['*\.vim']
 
 
 "GREPLACE
 "--------------------------------
-
 set grepprg=ag    "we want to use ag for the search
 let g:grep_cmd_opts = '--line-numbers --noheading'
 
 
 "AIRLINE
 "--------------------------------
-
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
@@ -309,11 +304,22 @@ function! DiffToggle(mode) range
 
 " TESTING
 "--------------
-command! -nargs=* TN execute 'TestNearest'
+command! -nargs=* TN call CustomTestNearest()
 command! -nargs=* TF execute 'TestFile'
 command! -nargs=* TL execute 'TestLast'
 command! -nargs=* TS execute 'TestSuite'
 command! -nargs=* TV execute 'TestVisit'
+"command TestBehat execute 'FloatermNew eval "$(dip console)" && behat %'
+command TestBehat execute 'FloatermNew docker-compose -f docker-compose.yml exec php-fpm bash -c "php bin/behat %"'
+
+
+function! CustomTestNearest()
+    if (&ft=='cucumber')
+        execute "TestBehat"
+    else
+        execute 'TestNearest'
+    endif
+endfunction
 
 " ----------------------------------------------------------------------------
 " VDebug
@@ -329,26 +335,19 @@ let g:vdebug_options = {'break_on_open': 0}
 let g:vdebug_options = {'server': 'localhost'}
 let g:vdebug_options = {'port': '9001'}
 
-" ----------------------------------------------------------------------------
-" Php-cs-fixer
-" ----------------------------------------------------------------------------
-" If you want to define specific fixers:
-" If you use php-cs-fixer version 2.x
-let g:php_cs_fixer_rules = "@PSR2,no_unused_imports,no_useless_else,no_useless_return,align_multiline_comment"          " options: --rules (default:@PSR2)
-let g:php_cs_fixer_php_path = "php"               " Path to PHP
-let g:php_cs_fixer_enable_default_mapping = 1     " Enable the mapping by default (<leader>pcd)
-let g:php_cs_fixer_dry_run = 0                    " Call command with dry-run option
-let g:php_cs_fixer_verbose = 0
+" vimspector
+let g:vimspector_enable_mappings = 'HUMAN'
+nnoremap <Leader>dd :call vimspector#Launch()<CR>
+nnoremap <Leader>dr :call vimspector#Reset()<CR>
+nnoremap <Leader>dc :call vimspector#Continue()<CR>
 
-function! s:DiffWithSaved()
-    let filetype=&ft
-    diffthis
-    vnew | r # | normal! 1Gdd
-    diffthis
-    exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
-endfunction
+nnoremap <Leader>dt :call vimspector#ToggleBreakpoint()<CR>
+nnoremap <Leader>dT :call vimspector#ClearBreakpoints()<CR>
 
-command! -nargs=* Fix :execute PhpCsFixerFixFile() | :undo | :w | :redo | call s:DiffWithSaved()
+nmap <Leader>dk <Plug>VimspectorRestart
+nmap <Leader>dh <Plug>VimspectorStepOut
+nmap <Leader>dl <Plug>VimspectorStepInto
+nmap <Leader>dj <Plug>VimspectorStepOver
 
 "-----------------
 " RIPGREP
@@ -369,19 +368,17 @@ command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 "-----------------
 noremap <silent> cc :CocCommand<cr>
 noremap <silent> cl :CocList<cr>
-noremap <silent> ca :CocAction<cr>
+
+xmap <silent>ca  <Plug>(coc-codeaction-selected)w
+nmap <silent>ca  <Plug>(coc-codeaction-selected)w
+" Remap keys for applying codeAction to the current buffer.
+nmap <silent>ac  <Plug>(coc-codeaction)
 
 noremap <silent> <leader>n :CocCommand explorer<cr>
+noremap <silent> gt :CocCommand angular.goToTemplateForComponent<cr>
+noremap <silent> gc :CocCommand angular.goToComponentWithTemplateFile<cr>
 
 "-----------------
-" DOGE
+" .tsx files
 "-----------------
-let g:doge_php_settings = {
-            \  'resolve_fqn': 1
-            \}
-
-"-----------------
-" CONTEXT
-"-----------------
-let g:contex_enabled = 0
-let g:context_filetype_blacklist = ['php']
+autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
