@@ -53,12 +53,8 @@ highlight Comment ctermfg=grey cterm=italic
 hi Error ctermfg=17 ctermbg=166 cterm=none
 hi SpellBad ctermfg=17 ctermbg=166 cterm=undercurl
 
-"popup
-highlight Pmenu ctermbg=none ctermfg=blue
-highlight PmenuSel ctermbg=none ctermfg=yellow
-
 " Braces coloring
-autocmd BufRead,BufNewFile * syn match parens /[(){}]/ | hi parens ctermfg=blue
+autocmd BufRead,BufNewFile * syn match parens /[(){}]/ | hi parens ctermfg=223
 
 function! PhpSyntaxOverride()
     "hi! def link phpDocTags  phpDefine
@@ -73,3 +69,24 @@ augroup phpSyntaxOverride
     autocmd FileType php call PhpSyntaxOverride()
 augroup END
 
+"Coc Completion
+func! s:CocOveride() abort
+    hi Pmenu ctermbg=24
+    hi CocSearch ctermfg=11
+    hi FgCocErrorFloatBgCocFloating ctermbg=24 ctermfg=Red
+    hi CocMenuSel ctermfg=blue ctermbg=150
+    hi PmenuSbar guibg=#bcbcbc
+    hi PmenuThumb guibg=#585858
+
+endfunc
+
+augroup colorscheme_coc_setup | au!
+    au ColorScheme * call s:CocOveride()
+augroup END
+
+function! CheckHiGroup()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
