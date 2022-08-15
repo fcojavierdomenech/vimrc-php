@@ -20,7 +20,6 @@ let path = expand('%:p:h')
 
 source ~/.vim/vimrc-php/config/helpers.vimrc
 source ~/.vim/vimrc-php/config/settings.vimrc
-source ~/.vim/vimrc-php/config/colorscheme.vimrc
 source ~/.vim/vimrc-php/config/plugs.vimrc
 source ~/.vim/vimrc-php/config/mappings.vimrc
 source ~/.vim/vimrc-php/config/english-keyboard-mappings.vimrc
@@ -29,3 +28,4 @@ if has('macunix')
 else
     source ~/.vim/vimrc-php/config/linux-mappings.vimrc
 endif
+source ~/.vim/vimrc-php/config/colorscheme.vimrc
